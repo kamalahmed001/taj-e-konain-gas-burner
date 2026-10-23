@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="heroDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f17" />
+      <stop offset="50%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="heroFlame" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#ea580c" />
+      <stop offset="60%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#fde047" />
+    </linearGradient>
+    <radialGradient id="flameGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ea580c" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#0b0f17" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  
+  <rect width="1200" height="600" fill="url(#heroDark)" />
+  <circle cx="850" cy="300" r="350" fill="url(#flameGlow)" />
+  
+  <!-- Stylized Gas Stove Visual on Right -->
+  <g transform="translate(680, 150)">
+    <!-- Stove Platform -->
+    <rect x="0" y="80" width="460" height="240" rx="24" fill="#090d16" stroke="#ea580c" stroke-width="3" />
+    <!-- Blue Glow Underneath -->
+    <ellipse cx="230" cy="320" rx="180" ry="20" fill="#38bdf8" opacity="0.15" />
+    
+    <!-- Left Burner with Active Blue & Orange Flame -->
+    <g transform="translate(130, 190)">
+      <circle cx="0" cy="0" r="60" fill="#1e293b" stroke="#f97316" stroke-width="4" />
+      <circle cx="0" cy="0" r="45" fill="#0f172a" />
+      <!-- Flame spikes -->
+      <path d="M 0,-55 C -15,-40 -25,-20 0,-70 C 25,-20 15,-40 0,-55 Z" fill="url(#heroFlame)" />
+      <circle cx="0" cy="0" r="30" fill="#38bdf8" opacity="0.85" />
+      <circle cx="0" cy="0" r="15" fill="#fde047" />
+    </g>
+    
+    <!-- Right Burner -->
+    <g transform="translate(330, 190)">
+      <circle cx="0" cy="0" r="60" fill="#1e293b" stroke="#f97316" stroke-width="4" />
+      <circle cx="0" cy="0" r="45" fill="#0f172a" />
+      <path d="M 0,-55 C -15,-40 -25,-20 0,-70 C 25,-20 15,-40 0,-55 Z" fill="url(#heroFlame)" />
+      <circle cx="0" cy="0" r="30" fill="#38bdf8" opacity="0.85" />
+      <circle cx="0" cy="0" r="15" fill="#fde047" />
+    </g>
+    
+    <!-- Controls -->
+    <circle cx="150" cy="285" r="15" fill="#e2e8f0" stroke="#475569" stroke-width="2" />
+    <circle cx="310" cy="285" r="15" fill="#e2e8f0" stroke="#475569" stroke-width="2" />
+  </g>
+</svg>

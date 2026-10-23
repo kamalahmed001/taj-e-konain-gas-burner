@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#e2e8f0" />
+    </linearGradient>
+    <linearGradient id="steelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#cbd5e1" />
+      <stop offset="50%" stop-color="#f1f5f9" />
+      <stop offset="100%" stop-color="#94a3b8" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ea580c" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="450" fill="url(#bgGrad)" />
+  <rect x="20" y="20" width="560" height="410" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" filter="url(#shadow)" />
+
+  <!-- Badge / Tag -->
+  <g transform="translate(40, 42)">
+    <rect x="0" y="0" width="130" height="24" rx="12" fill="#ea580c" />
+    <text x="65" y="16" font-family="'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="1">
+      COMMERCIAL
+    </text>
+  </g>
+
+  <!-- Model watermark -->
+  <text x="560" y="58" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" fill="#94a3b8" text-anchor="end" letter-spacing="1">
+    SKU: TK-CB-707
+  </text>
+
+  <!-- Product Graphic -->
+  <g>
+    
+      <!-- Commercial Heavy-Duty Cast Iron Burner -->
+      <g transform="translate(300, 240)">
+        <!-- Outer heavy cast iron square frame -->
+        <rect x="-130" y="-80" width="260" height="160" rx="12" fill="#18181b" stroke="#52525b" stroke-width="6" />
+        <!-- Heavy pan support ribs -->
+        <line x1="-130" y1="-80" x2="-60" y2="-20" stroke="#71717a" stroke-width="8" stroke-linecap="round" />
+        <line x1="130" y1="-80" x2="60" y2="-20" stroke="#71717a" stroke-width="8" stroke-linecap="round" />
+        <line x1="-130" y1="80" x2="-60" y2="20" stroke="#71717a" stroke-width="8" stroke-linecap="round" />
+        <line x1="130" y1="80" x2="60" y2="20" stroke="#71717a" stroke-width="8" stroke-linecap="round" />
+        <!-- Big Dual Ring Cast Iron Burner Head -->
+        <circle cx="0" cy="0" r="65" fill="#27272a" stroke="#ea580c" stroke-width="5" stroke-dasharray="8 4" />
+        <circle cx="0" cy="0" r="42" fill="#18181b" stroke="#f97316" stroke-width="4" stroke-dasharray="6 3" />
+        <circle cx="0" cy="0" r="22" fill="#ea580c" />
+        <!-- Brass Inlet Needle Valve / Pipe -->
+        <rect x="-180" y="-8" width="55" height="16" rx="3" fill="#ca8a04" stroke="#854d0e" stroke-width="2" />
+        <circle cx="-185" cy="0" r="14" fill="#dc2626" stroke="#991b1b" stroke-width="2" />
+      </g>
+    
+  </g>
+
+  <!-- Title & Subtitle at bottom -->
+  <g transform="translate(300, 395)">
+    <text x="0" y="0" font-family="'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="800" fill="#0f172a" text-anchor="middle">
+      Heavy Cast Iron Commercial Cooking Burner
+    </text>
+    <text x="0" y="20" font-family="'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="600" fill="#64748b" text-anchor="middle">
+      Taj-e-Konain Gas Burner • Reliable Quality
+    </text>
+  </g>
+</svg>

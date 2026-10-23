@@ -1,0 +1,18 @@
+{
+  "name": "taj-e-konain-gas-burner",
+  "version": "1.0.0",
+  "description": "Taj-e-Konain Gas Burner — Professional E-Commerce Website with WhatsApp Ordering",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "seed": "npm --prefix server run seed",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

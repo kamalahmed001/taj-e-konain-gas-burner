@@ -1,0 +1,879 @@
+import bcrypt from 'bcryptjs';
+import db, { initSchema } from './db.js';
+import dotenv from 'dotenv';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'TajGasBurnerAdmin2026!';
+const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || '923432833991';
+
+export function seedDatabase() {
+  console.log('--- Initializing Database Schema ---');
+  initSchema();
+
+  console.log('--- Seeding Admin Credentials ---');
+  const existingAdmin = db.prepare('SELECT id FROM admins WHERE username = ?').get(ADMIN_USERNAME);
+  const salt = bcrypt.genSaltSync(10);
+  const passwordHash = bcrypt.hashSync(ADMIN_PASSWORD, salt);
+
+  if (existingAdmin) {
+    db.prepare('UPDATE admins SET password_hash = ? WHERE username = ?').run(passwordHash, ADMIN_USERNAME);
+    console.log(`Updated admin password for '${ADMIN_USERNAME}'`);
+  } else {
+    db.prepare('INSERT INTO admins (username, password_hash) VALUES (?, ?)').run(ADMIN_USERNAME, passwordHash);
+    console.log(`Created admin user '${ADMIN_USERNAME}'`);
+  }
+
+  console.log('--- Seeding Categories ---');
+  const categories = [
+    {
+      name: 'Double-Burner Gas Stoves',
+      slug: 'double-burner-gas-stoves',
+      description: 'Reliable and durable two-burner stoves in tempered glass and stainless steel finishes for everyday home cooking.',
+      image_url: '/images/categories/cat-double-burners.svg',
+      display_order: 1
+    },
+    {
+      name: 'Three-Burner Gas Stoves',
+      slug: 'three-burner-gas-stoves',
+      description: 'Spacious triple-burner stoves designed for busy family kitchens and simultaneous multi-dish cooking.',
+      image_url: '/images/categories/cat-triple-burners.svg',
+      display_order: 2
+    },
+    {
+      name: 'Built-in Gas Hobs',
+      slug: 'built-in-gas-hobs',
+      description: 'Sleek, modern drop-in kitchen hobs with auto-ignition and triple-ring high-efficiency flame burners.',
+      image_url: '/images/categories/cat-builtin-hobs.svg',
+      display_order: 3
+    },
+    {
+      name: 'Stainless Steel Gas Stoves',
+      slug: 'stainless-steel-gas-stoves',
+      description: 'Heavy-gauge, rust-resistant stainless steel body stoves engineered for long-lasting Pakistani kitchen use.',
+      image_url: '/images/categories/cat-double-burners.svg',
+      display_order: 4
+    },
+    {
+      name: 'Single & Portable Gas Burners',
+      slug: 'portable-gas-burners',
+      description: 'Compact single-burner table stoves and portable LPG burners ideal for tea stalls, small spaces, and outdoor use.',
+      image_url: '/images/categories/cat-accessories.svg',
+      display_order: 5
+    },
+    {
+      name: 'Heavy-Duty Commercial Burners',
+      slug: 'commercial-burners',
+      description: 'Industrial-grade cast iron cooking burners for restaurants, catering events, hotels, and large cauldrons (deghs).',
+      image_url: '/images/categories/cat-commercial.svg',
+      display_order: 6
+    },
+    {
+      name: 'Gas Regulators & Safety Valves',
+      slug: 'gas-regulators',
+      description: 'Certified low-pressure and high-pressure LPG regulators, auto-cutoff safety valves, and pressure gauge meters.',
+      image_url: '/images/categories/cat-regulators.svg',
+      display_order: 7
+    },
+    {
+      name: 'Gas Hoses & Connectors',
+      slug: 'gas-hoses-connectors',
+      description: 'Heavy steel-wire braided safety hoses, brass hose nipples, T-joints, and leak-proof gas pipe clamps.',
+      image_url: '/images/categories/cat-accessories.svg',
+      display_order: 8
+    },
+    {
+      name: 'Burner Heads, Caps & Trivets',
+      slug: 'burner-heads-accessories',
+      description: 'Pure brass burner caps, flame spreader rings, and heavy cast iron anti-slip pan support trivets.',
+      image_url: '/images/categories/cat-accessories.svg',
+      display_order: 9
+    },
+    {
+      name: 'Stove Knobs & Replacement Parts',
+      slug: 'knobs-spare-parts',
+      description: 'D-type universal stove knobs, piezoelectric spark igniters, micro switches, and brass nozzle jets.',
+      image_url: '/images/categories/cat-accessories.svg',
+      display_order: 10
+    }
+  ];
+
+  const insertCategory = db.prepare(`
+    INSERT INTO categories (name, slug, description, image_url, display_order)
+    VALUES (?, ?, ?, ?, ?)
+    ON CONFLICT(slug) DO UPDATE SET
+      name=excluded.name,
+      description=excluded.description,
+      image_url=excluded.image_url,
+      display_order=excluded.display_order
+  `);
+
+  categories.forEach(cat => {
+    insertCategory.run(cat.name, cat.slug, cat.description, cat.image_url, cat.display_order);
+  });
+
+  // Fetch category IDs
+  const catRows = db.prepare('SELECT id, slug, name FROM categories').all();
+  const catMap = {};
+  catRows.forEach(c => { catMap[c.slug] = c; });
+
+  console.log('--- Seeding 18 Demonstration Products ---');
+  const products = [
+    {
+      sku: 'TK-DG-201',
+      name: 'Taj Premium Tempered Glass Double Burner Stove',
+      slug: 'taj-premium-tempered-glass-double-burner-stove',
+      category_slug: 'double-burner-gas-stoves',
+      short_description: '7mm shatter-resistant black tempered glass top with high-efficiency brass burner caps and piezo auto-ignition.',
+      description: 'Elevate your kitchen with the Taj Premium Double Burner Stove. Built with a tough 7mm thermally toughened black glass panel, heavy cast iron pan supports, and gold-finish brass burner caps that provide uniform blue flame heat distribution. Compatible with both Natural (Sui) Gas and LPG cylinder setups with simple nozzle adjustment.',
+      specifications: JSON.stringify({
+        'Body Material': '7mm Toughened Tempered Glass & Steel Base',
+        'Burners': '2 Heavy Brass Burner Tops (Large & Medium)',
+        'Gas Compatibility': 'Natural Gas (Sui Gas) / LPG Convertible',
+        'Ignition Type': 'Automatic Piezo Ignition (Battery-free)',
+        'Pan Support': 'Heavy-duty Enamelled Cast Iron Trivets',
+        'Dimensions': '710 mm × 390 mm × 95 mm',
+        'Flame Efficiency': 'High Thermal Efficiency Blue Flame',
+        'Warranty Note': '1-Year Limited Burner Warranty (Verify with Store)'
+      }),
+      price: 11500,
+      discount_price: 9950,
+      stock_quantity: 15,
+      is_available: 1,
+      is_featured: 1,
+      is_published: 1,
+      primary_image: '/images/products/p1-double-burner-glass.svg',
+      images: JSON.stringify(['/images/products/p1-double-burner-glass.svg']),
+      meta_title: 'Taj Tempered Glass Double Burner Stove - Taj-e-Konain',
+      meta_description: 'Buy premium tempered glass double burner gas stove in Pakistan. Auto ignition, pure brass burners, Sui gas & LPG ready. Order on WhatsApp.'
+    },
+    {
+      sku: 'TK-SS-202',
+      name: 'Taj Heavy-Gauge Stainless Steel Double Burner Stove',
+      slug: 'taj-heavy-gauge-stainless-steel-double-burner-stove',
+      category_slug: 'stainless-steel-gas-stoves',
+      short_description: 'Non-magnetic heavy stainless steel body built for extreme durability, heavy Pakistani cookware, and easy wipe-down cleaning.',
+      description: 'A true workhorse for Pakistani kitchens, the Taj Heavy-Gauge Stainless Steel Double Burner Stove features a seamless drawn stainless steel top that resists rust, stains, and daily wear. Solid cast iron pan supports comfortably cradle heavy pressure cookers, karahis, and handis without wobbling.',
+      specifications: JSON.stringify({
+        'Body Material': 'Commercial Grade Non-Magnetic Stainless Steel',
+        'Burners': '2 Whirlwind High-Efficiency Brass Burners',
+        'Gas Compatibility': 'Natural Gas (Sui Gas) / LPG Cylinder Ready',
+        'Ignition Type': 'Manual / Auto-Spark Compatible',
+        'Pan Support': 'Non-slip Heavy Cast Iron Spoke Trivets',
+        'Dimensions': '700 mm × 380 mm × 110 mm',
+        'Cleaning': 'Removable Spill Trays for Easy Washing',
+        'Warranty Note': 'Store Demonstration Model — Inquire via WhatsApp'
+      }),
+      price: 10500,
+      discount_price: 8900,
+      stock_quantity: 20,
+      is_available: 1,
+      is_featured: 1,
+      is_published: 1,
+      primary_image: '/images/products/p2-double-burner-steel.svg',
+      images: JSON.stringify(['/images/products/p2-double-burner-steel.svg']),
+      meta_title: 'Stainless Steel Double Burner Gas Stove - Taj-e-Konain',
+      meta_description: 'Heavy duty stainless steel 2-burner gas stove for Pakistani kitchens. Durable, rust-free, supports heavy cooking. Instant WhatsApp order.'
+    },
+    {
+      sku: 'TK-TG-303',
+      name: 'Taj Royal 3-Burner Tempered Glass Kitchen Stove',
+      slug: 'taj-royal-3-burner-tempered-glass-kitchen-stove',
+      category_slug: 'three-burner-gas-stoves',
+      short_description: 'Three strategically positioned burners allowing multiple large pots simultaneously with a dedicated tea/simmer burner.',
+      description: 'Prepare multiple dishes at once effortlessly with the Taj Royal 3-Burner Stove. Features one large high-power wok burner, one medium cooking burner, and one centered small simmer burner ideal for preparing chai or keeping gravies warm. Beautiful glossy black glass with heat-resistant metallic knobs.',
+      specifications: JSON.stringify({
+        'Burner Configuration': '1 Jumbo Wok, 1 Medium, 1 Small Simmer Burner',
+        'Top Panel': '8mm Beveled Edge Tempered Safety Glass',
+        'Gas Type': 'Natural Gas / LPG Compatible',
+        'Ignition': 'Precision Rotary Auto-Ignition',
+        'Trivets': 'Heavy Matt-Black Cast Iron Pan Supports',
+        'Dimensions': '740 mm × 420 mm × 95 mm',
+        'Safety': 'Spill-proof drip collection trays',
+        'Demo Catalog Note': 'Demonstration price subject to store confirmation'
+      }),
+      price: 16500,
+      discount_price: 14500,
+      stock_quantity: 8,
+      is_available: 1,
+      is_featured: 1,
+      is_published: 1,
+      primary_image: '/images/products/p3-triple-burner-glass.svg',
+      images: JSON.stringify(['/images/products/p3-triple-burner-glass.svg']),
+      meta_title: '3-Burner Glass Top Gas Stove Pakistan - Taj-e-Konain',
+      meta_description: 'Shop 3-burner gas stove in Pakistan with 8mm tempered glass, triple-flame burners, and auto ignition. Order directly via WhatsApp.'
+    },
+    {
+      sku: 'TK-4B-404',
+      name: 'Taj Imperial 4-Burner Built-In Luxury Gas Hob',
+      slug: 'taj-imperial-4-burner-built-in-luxury-gas-hob',
+      category_slug: 'built-in-gas-hobs',
+      short_description: 'Countertop drop-in built-in luxury hob with Italian-style triple-ring wok burner and continuous cast iron grates.',
+      description: 'Transform your modular kitchen with the Taj Imperial 4-Burner Built-In Gas Hob. Engineered for flush or seamless drop-in countertop installation. Includes a powerful center-left triple flame wok burner producing intense heat for fast stir-frying and browning, along with three versatile auxiliary burners.',
+      specifications: JSON.stringify({
+        'Installation Type': 'Built-In Countertop Drop-in / Tabletop convertible',
+        'Burners': '4 Burners (1 Triple-Ring Wok, 2 Semi-Rapid, 1 Auxiliary)',
+        'Hob Surface': '8mm Thermal Shock Tempered Glass',
+        'Control Knobs': 'Front Ergonomic Zinc Alloy Metal Knobs',
+        'Cutout Size': '560 mm × 480 mm',
+        'Overall Dimensions': '600 mm × 510 mm × 100 mm',
+        'Ignition': 'Pulse Electric Spark Ignition (AC / Battery)',
+        'Gas Compatibility': 'Pre-calibrated for Sui Gas; LPG jets included'
+      }),
+      price: 26500,
+      discount_price: 23800,
+      stock_quantity: 5,
+      is_available: 1,
+      is_featured: 1,
+      is_published: 1,
+      primary_image: '/images/products/p4-four-burner-hob.svg',
+      images: JSON.stringify(['/images/products/p4-four-burner-hob.svg']),
+      meta_title: '4-Burner Built-in Gas Hob Pakistan - Taj-e-Konain',
+      meta_description: 'Modern 4-burner kitchen built-in gas hob with triple-ring wok burner, cast iron grates, and toughened glass. Inquire via WhatsApp.'
+    },
+    {
+      sku: 'TK-SH-305',
+      name: 'Taj Stainless Steel 3-Burner Drop-In Kitchen Hob',
+      slug: 'taj-stainless-steel-3-burner-drop-in-kitchen-hob',
+      category_slug: 'built-in-gas-hobs',
+      short_description: 'Satin-finish brushed stainless steel drop-in hob that never chips or cracks, engineered for lifetime kitchen service.',
+      description: 'For those who demand the unmatched longevity and sleek industrial aesthetic of stainless steel, the Taj 3-Burner Drop-In Hob delivers. Features a heavy stainless top plate with sunken drip wells that prevent accidental liquid overflow from running down kitchen cabinets.',
+      specifications: JSON.stringify({
+        'Material': 'Grade 304 Brushed Satin Stainless Steel',
+        'Burners': '3 Italian-Style Brass & Alloy Burners',
+        'Controls': 'Front Mounted Brushed Aluminum Dials',
+        'Cutout Dimensions': '680 mm × 350 mm',
+        'Overall Dimensions': '730 mm × 410 mm',
+        'Gas Pressure': '20 mbar (Sui Gas) / 30 mbar (LPG)',
+        'Safety': 'Integrated Flame Failure Device (FFD) compatible'
+      }),
+      price: 21500,
+      discount_price: 19200,
+      stock_quantity: 6,
+      is_available: 1,
+      is_featured: 0,
+      is_published: 1,
+      primary_image: '/images/products/p5-builtin-hob-stainless.svg',
+      images: JSON.stringify(['/images/products/p5-builtin-hob-stainless.svg']),
+      meta_title: 'Stainless Steel 3-Burner Gas Hob - Taj-e-Konain',
+      meta_description: 'High quality drop-in stainless steel 3-burner gas hob in Pakistan. Rust-proof, easy maintenance, strong pan support. Order on WhatsApp.'
+    },
+    {
+      sku: 'TK-SB-106',
+      name: 'Taj Compact Single Burner Auto-Ignition Table Stove',
+      slug: 'taj-compact-single-burner-auto-ignition-table-stove',
+      category_slug: 'portable-gas-burners',
+      short_description: 'Space-saving single burner stove with piezo auto-spark, perfect for bachelor flats, small kitchens, and office pantries.',
+      description: 'Small in size but mighty in performance! The Taj Compact Single Burner Stove is ideal for studio apartments, hostel rooms, office tea stations, or as a secondary cooking unit during Eid and family gatherings. Featuring a durable coated steel body and efficient swirl flame burner.',
+      specifications: JSON.stringify({
+        'Burner': 'Single 100mm Brass Swirl Burner',
+        'Body': 'Powder-coated Heavy Metal Chassis',
+        'Ignition': 'Automatic Piezo Ignition (No matchbox needed)',
+        'Dimensions': '370 mm × 290 mm × 90 mm',
+        'Portability': 'Lightweight (approx. 2.2 kg), easy to relocate',
+        'Gas Type': 'Sui Gas or LPG (Specify when ordering)'
+      }),
+      price: 4800,
+      discount_price: 4200,
+      stock_quantity: 25,
+      is_available: 1,
+      is_featured: 1,
+      is_published: 1,
+      primary_image: '/images/products/p6-single-burner-portable.svg',
+      images: JSON.stringify(['/images/products/p6-single-burner-portable.svg']),
+      meta_title: 'Single Burner Auto-Ignition Gas Stove - Taj-e-Konain',
+      meta_description: 'Affordable and compact single burner gas stove in Pakistan with automatic ignition. Reliable burner for tea and small cooking.'
+    },
+    {
+      sku: 'TK-CB-707',
+      name: 'Taj Heavy Cast Iron Commercial Cooking Burner (C-30)',
+      slug: 'taj-heavy-cast-iron-commercial-cooking-burner-c30',
+      category_slug: 'commercial-burners',
+      short_description: 'Massive solid cast iron construction engineered for commercial restaurants, catering deghs, and industrial frying.',
+      description: 'When massive heat output is needed, the Taj Heavy Cast Iron C-30 Burner is the undisputed champion. Molded from high-tensile gray cast iron to withstand extreme thermal expansion, massive cauldron pots, and continuous all-day commercial operation in dhabas, hotels, and catering kitchens.',
+      specifications: JSON.stringify({
+        'Material': 'Heavy High-Tensile Cast Iron',
+        'Burner Type': 'Dual-Ring Concentric Gas Jets',
+        'Heat Output': 'Over 45,000 BTU/hr high-intensity output',
+        'Valves': 'Dual Solid Brass Needle Valves for Inner/Outer Ring Control',
+        'Weight': 'Approx. 8.5 kg solid iron',
+        'Gas Type': 'High Pressure LPG or Direct Sui Gas pipeline'
+      }),
+      price: 8500,
+      discount_price: 7600,
+      stock_quantity: 12,
+      is_available: 1,
+      is_featured: 1,
+      is_published: 1,
+      primary_image: '/images/products/p7-commercial-cast-iron.svg',
+      images: JSON.stringify(['/images/products/p7-commercial-cast-iron.svg']),
+      meta_title: 'Commercial Cast Iron Gas Burner C30 - Taj-e-Konain',
+      meta_description: 'Heavy duty commercial cast iron gas stove burner for restaurants and catering in Pakistan. High flame output, dual brass valves.'
+    },
+    {
+      sku: 'TK-DR-808',
+      name: 'Taj Dual-Ring Hotel & Catering Heavy Stove Stand',
+      slug: 'taj-dual-ring-hotel-catering-heavy-stove-stand',
+      category_slug: 'commercial-burners',
+      short_description: 'Welded angle-iron reinforced cooking stand with integrated dual-flame commercial burner for halwa puri, biryani deghs, and nihari.',
+      description: 'Engineered specifically for Pakistani culinary masters, this heavy-duty square stand supports up to 100 kg cauldrons (deghs) and massive tawa fryers. Built with reinforced iron legs and dual high-flow burner rings controlled by individual brass valves.',
+      specifications: JSON.stringify({
+        'Frame': 'Reinforced 1.5-inch Angle Iron Welded Frame',
+        'Load Capacity': 'Up to 100 kg heavy cooking vessels',
+        'Burner Diameter': '10-inch Dual Concentric Flame Rings',
+        'Height': '14 inches raised floor clearance for safe operation',
+        'Inlet': 'Standard 1/2-inch Brass Hose Nipple'
+      }),
+      price: 13500,
+      discount_price: 11900,
+      stock_quantity: 7,
+      is_available: 1,
+      is_featured: 0,
+      is_published: 1,
+      primary_image: '/images/products/p8-heavy-duty-catering.svg',
+      images: JSON.stringify(['/images/products/p8-heavy-duty-catering.svg']),
+      meta_title: 'Heavy Duty Catering Stove Stand - Taj-e-Konain',
+      meta_description: 'Industrial hotel and catering gas stove stand in Pakistan. Sturdy frame for heavy degh cooking, dual ring burners, WhatsApp delivery.'
+    },
+    {
+      sku: 'TK-RG-909',
+      name: 'Taj Low-Pressure LPG Regulator with Pressure Gauge Meter',
+      slug: 'taj-low-pressure-lpg-regulator-with-pressure-gauge-meter',
+      category_slug: 'gas-regulators',
+      short_description: 'Safety-certified domestic LPG regulator with built-in pressure dial meter and automatic leak shut-off diaphragm.',
+      description: 'Safety first in every kitchen! The Taj Low-Pressure LPG Regulator provides consistent gas flow to household stoves while protecting your home from pressure surges. The integrated analog pressure meter lets you monitor gas level and instantly detect pipeline leaks before lighting.',
+      specifications: JSON.stringify({
+        'Inlet Pressure': '0.3 to 7.5 bar',
+        'Outlet Pressure': '28 - 30 mbar calibrated domestic flow',
+        'Safety Feature': 'Excess Flow Automatic Cut-off Mechanism',
+        'Meter': 'Color-coded Analog Cylinder Gas Indicator',
+        'Cylinder Fit': 'Standard Pakistani 11.8kg / 45.4kg LPG Cylinder Valve'
+      }),
+      price: 1850,
+      discount_price: 1550,
+      stock_quantity: 40,
+      is_available: 1,
+      is_featured: 1,
+      is_published: 1,
+      primary_image: '/images/products/p9-gas-regulator-meter.svg',
+      images: JSON.stringify(['/images/products/p9-gas-regulator-meter.svg']),
+      meta_title: 'LPG Gas Regulator with Meter Pakistan - Taj-e-Konain',
+      meta_description: 'Buy certified LPG cylinder gas regulator with pressure meter in Pakistan. Auto safety shutoff, leak prevention. Inquire via WhatsApp.'
+    },
+    {
+      sku: 'TK-HR-910',
+      name: 'Taj High-Pressure Heavy Commercial Gas Regulator',
+      slug: 'taj-high-pressure-heavy-commercial-gas-regulator',
+      category_slug: 'gas-regulators',
+      short_description: 'Industrial brass-core adjustable high-pressure regulator for commercial burners, tandoors, and fast food fryers.',
+      description: 'Built for high-volume commercial cooking where domestic low pressure is insufficient. Features an adjustable red rotary control knob to dial in flame pressure from mild to roaring high-flame temperatures for fast tandoors, naan ovens, and wok stations.',
+      specifications: JSON.stringify({
+        'Regulator Type': 'Adjustable High Pressure Rotary Regulator',
+        'Body': 'Solid Die-Cast Zinc & Brass Internal Needle',
+        'Outlet Flow': '0 to 2 bar adjustable output',
+        'Applications': 'Commercial Burners, Tandoors, Shawarma Machines',
+        'Connection': 'Heavy Brass Threaded Nut'
+      }),
+      price: 2400,
+      discount_price: 2100,
+      stock_quantity: 30,
+      is_available: 1,
+      is_featured: 0,
+      is_published: 1,
+      primary_image: '/images/products/p10-high-pressure-regulator.svg',
+      images: JSON.stringify(['/images/products/p10-high-pressure-regulator.svg']),
+      meta_title: 'High Pressure Gas Regulator Commercial - Taj-e-Konain',
+      meta_description: 'Commercial high pressure gas regulator for tandoor, hotel burners and catering in Pakistan. Brass build, adjustable flame control.'
+    },
+    {
+      sku: 'TK-GH-111',
+      name: 'Taj Steel-Wire Braided Explosion-Proof Gas Hose (2 Meters)',
+      slug: 'taj-steel-wire-braided-explosion-proof-gas-hose-2m',
+      category_slug: 'gas-hoses-connectors',
+      short_description: '3-layer explosion-proof rubber gas pipe wrapped with high-tensile stainless steel wire mesh to prevent rodent bites and cracking.',
+      description: 'Standard orange rubber pipes can crack, dry out, or be chewed through by rodents, creating severe fire hazards. The Taj Steel-Wire Braided Gas Hose encases heavy synthetic rubber inside a woven stainless steel armor, giving you total peace of mind for both domestic kitchens and commercial setups.',
+      specifications: JSON.stringify({
+        'Length': '2.0 Meters (Custom lengths available on request)',
+        'Layer 1 (Inner)': 'NBR Gas Resistant Synthetic Rubber',
+        'Layer 2 (Middle)': 'High Tensile Steel Wire Braid Armor',
+        'Layer 3 (Outer)': 'Flame Retardant Clear PVC Protective Sleeve',
+        'Accessories': 'Includes 2 Heavy Stainless Steel Worm-Drive Clamps',
+        'Working Temp': '-20°C to +80°C'
+      }),
+      price: 1250,
+      discount_price: 990,
+      stock_quantity: 60,
+      is_available: 1,
+      is_featured: 1,
+      is_published: 1,
+      primary_image: '/images/products/p11-gas-hose-braided.svg',
+      images: JSON.stringify(['/images/products/p11-gas-hose-braided.svg']),
+      meta_title: 'Steel Braided Gas Hose Pipe 2m Pakistan - Taj-e-Konain',
+      meta_description: 'Rodent-proof, flame-resistant braided steel wire gas hose pipe in Pakistan. Comes with safety clamps. WhatsApp order available.'
+    },
+    {
+      sku: 'TK-BC-112',
+      name: 'Taj Pure Brass Burner Cap & Flame Spreader Ring Set',
+      slug: 'taj-pure-brass-burner-cap-flame-spreader-ring-set',
+      category_slug: 'burner-heads-accessories',
+      short_description: 'Replacement 100% solid brass burner head cap set for double and triple burner stoves to restore crisp blue flames.',
+      description: 'If your gas stove produces uneven yellow flames, soot, or takes forever to boil water, your burner caps may be clogged or warped. Replace them with Taj 100% solid machined brass burner caps designed for optimal oxygen-to-gas ratio and maximum thermal efficiency.',
+      specifications: JSON.stringify({
+        'Material': '100% Virgin Machined Brass (High Thermal Tolerance)',
+        'Flame Type': 'Radial Slotted Even-Flame Distribution',
+        'Compatibility': 'Fits 90% of Pakistani and imported glass/steel stoves',
+        'Sizes Included': '1 Large (100mm) + 1 Medium (85mm) Cap Set',
+        'Corrosion': 'Resistant to cooking spills, acidic gravies, and salt'
+      }),
+      price: 1450,
+      discount_price: 1200,
+      stock_quantity: 50,
+      is_available: 1,
+      is_featured: 0,
+      is_published: 1,
+      primary_image: '/images/products/p12-heavy-brass-burner-cap.svg',
+      images: JSON.stringify(['/images/products/p12-heavy-brass-burner-cap.svg']),
+      meta_title: 'Pure Brass Gas Stove Burner Caps Set - Taj-e-Konain',
+      meta_description: 'Solid brass burner cap and flame ring replacement set in Pakistan. Fix yellow flames, restore blue flame heat. Fast WhatsApp order.'
+    },
+    {
+      sku: 'TK-TS-113',
+      name: 'Taj Heavy Cast Iron Pan Trivet Stand with Wok Ring',
+      slug: 'taj-heavy-cast-iron-pan-trivet-stand-with-wok-ring',
+      category_slug: 'burner-heads-accessories',
+      short_description: 'Heavyweight anti-skid cast iron pan support trivet with auxiliary mini ring for round-bottom handis and small coffee pots.',
+      description: 'Prevent pots and karahis from tilting or slipping while cooking. This heavy cast iron pan support features grooved serrations that grip utensils firmly, plus an included detachable auxiliary ring so you can easily balance small tea pans and tawa without spilling.',
+      specifications: JSON.stringify({
+        'Material': 'Heavy Cast Iron with Heat-Resistant Matt Coating',
+        'Spoke Design': '5-Finger Anti-Skid Grips',
+        'Outer Diameter': '215 mm universal fit for standard stove cutouts',
+        'Included Bonus': '1 Cast Iron Wok Reduction Ring',
+        'Durability': 'Will not bend, warp, or crack under extreme cooking heat'
+      }),
+      price: 1100,
+      discount_price: 900,
+      stock_quantity: 35,
+      is_available: 1,
+      is_featured: 0,
+      is_published: 1,
+      primary_image: '/images/products/p13-cast-iron-pan-trivet.svg',
+      images: JSON.stringify(['/images/products/p13-cast-iron-pan-trivet.svg']),
+      meta_title: 'Cast Iron Stove Trivet Stand Pakistan - Taj-e-Konain',
+      meta_description: 'Non-slip heavy cast iron trivet pan support stand for gas stoves in Pakistan. Includes wok adapter ring. Order on WhatsApp.'
+    },
+    {
+      sku: 'TK-KB-114',
+      name: 'Taj Heat-Resistant Metallic Universal Stove Knobs (Pack of 2)',
+      slug: 'taj-heat-resistant-metallic-universal-stove-knobs-pack-of-2',
+      category_slug: 'knobs-spare-parts',
+      short_description: 'Heavy zinc alloy chrome-accented D-shaft replacement knobs that won\'t melt or loosen from repeated heat exposure.',
+      description: 'Replace cracked, faded, or melted plastic stove knobs with these sleek, heavy-duty metallic knobs. Built with standard 6mm / 8mm D-shaped inner shafts to fit virtually any brand of glass stove or stainless steel hob available in Pakistan.',
+      specifications: JSON.stringify({
+        'Material': 'Zinc Alloy Metallic Core with Chrome Rim',
+        'Shaft Type': 'Universal 6mm / 8mm D-Shaft Collar with Spring Clip',
+        'Heat Resistance': 'Up to 250°C continuous radiant stove heat',
+        'Pack Quantity': '2 Knobs per pack',
+        'Color': 'Sleek Matt Charcoal with Chrome Index Indicator'
+      }),
+      price: 750,
+      discount_price: 590,
+      stock_quantity: 45,
+      is_available: 1,
+      is_featured: 0,
+      is_published: 1,
+      primary_image: '/images/products/p14-stove-knobs-set.svg',
+      images: JSON.stringify(['/images/products/p14-stove-knobs-set.svg']),
+      meta_title: 'Universal Gas Stove Knobs Pack of 2 - Taj-e-Konain',
+      meta_description: 'High heat resistant metallic replacement knobs for gas stoves and hobs in Pakistan. Universal D-shaft fit. Inquire on WhatsApp.'
+    },
+    {
+      sku: 'TK-IG-115',
+      name: 'Taj Piezo Auto-Ignition Spark Replacement Assembly Kit',
+      slug: 'taj-piezo-auto-ignition-spark-replacement-assembly-kit',
+      category_slug: 'knobs-spare-parts',
+      short_description: 'Complete replacement spark electrode, ceramic insulator, and high-voltage rotary piezo trigger for auto-spark stoves.',
+      description: 'Restore the convenience of battery-free instant auto-ignition to your stove. This complete kit includes high-dielectric ceramic electrodes, heat-proof silicone leads, and brass piezo rotary strike units rated for over 30,000 ignitions.',
+      specifications: JSON.stringify({
+        'Output Voltage': '>= 18 kV instant pulse spark',
+        'Life Expectancy': 'Tested for 30,000+ clicks',
+        'Insulation': 'Alumina Ceramic Collar (Heat rated to 800°C)',
+        'Cable': 'Pure Silicone Shielded High Voltage Wire (350mm)',
+        'Compatibility': 'Universal for manual rotary auto-ignition stoves'
+      }),
+      price: 950,
+      discount_price: 750,
+      stock_quantity: 30,
+      is_available: 1,
+      is_featured: 0,
+      is_published: 1,
+      primary_image: '/images/products/p15-spark-igniter-kit.svg',
+      images: JSON.stringify(['/images/products/p15-spark-igniter-kit.svg']),
+      meta_title: 'Stove Auto Ignition Spark Kit Pakistan - Taj-e-Konain',
+      meta_description: 'Piezo auto ignition spark replacement electrode and trigger kit for gas stoves in Pakistan. Keep stoves lighting without matches.'
+    },
+    {
+      sku: 'TK-CS-116',
+      name: 'Taj Outdoor Portable LPG Camping & Picnic Gas Stove',
+      slug: 'taj-outdoor-portable-lpg-camping-picnic-gas-stove',
+      category_slug: 'portable-gas-burners',
+      short_description: 'Lightweight camping stove packed inside a rugged hard-shell carrying case, ideal for Northern Pakistan tours and picnics.',
+      description: 'Heading to Murree, Hunza, or a weekend family picnic? The Taj Outdoor Camping Stove uses standard 220g butane gas cartridges or can be hooked up to small domestic LPG cylinders with the included brass adapter. Equipped with safety pressure ejection and built-in wind shield.',
+      specifications: JSON.stringify({
+        'Case Included': 'Heavy-duty Plastic Briefcase Carry Box',
+        'Fuel': 'Standard Butane Canister or External LPG with Adapter',
+        'Ignition': 'Built-in Push & Turn Auto Ignition',
+        'Wind Shield': 'Integrated Stainless Steel Wind Deflector Rim',
+        'Weight': 'Only 1.4 kg with case'
+      }),
+      price: 5600,
+      discount_price: 4800,
+      stock_quantity: 15,
+      is_available: 1,
+      is_featured: 1,
+      is_published: 1,
+      primary_image: '/images/products/p16-lpg-camping-stove.svg',
+      images: JSON.stringify(['/images/products/p16-lpg-camping-stove.svg']),
+      meta_title: 'Portable Camping Gas Stove with Box - Taj-e-Konain',
+      meta_description: 'Compact portable camping and outdoor picnic gas stove with carry box in Pakistan. Easy to travel with, order through WhatsApp.'
+    },
+    {
+      sku: 'TK-MK-117',
+      name: 'Taj Stove Maintenance & Nozzle Cleaning Wire Kit',
+      slug: 'taj-stove-maintenance-nozzle-cleaning-wire-kit',
+      category_slug: 'accessories-maintenance',
+      short_description: 'Set of 10 micro-gauge stainless steel orifice needles and copper wire cleaning brushes to eliminate yellow soot and clogs.',
+      description: 'Dust, grease, and evaporated oil often clog the tiny gas jets inside stove burners, resulting in low flame power or black soot on your cooking pots. This maintenance kit includes 10 precision wire gauges to clear nozzles without widening the orifice, plus brass and nylon brushes to clean burner caps.',
+      specifications: JSON.stringify({
+        'Needle Gauges': '0.4mm to 1.6mm stainless steel tipped needles',
+        'Brushes': '1 Solid Brass Wire Brush, 1 Steel Brush, 1 Nylon Brush',
+        'Convenience': 'Carabiner ring keeps all needles organized together',
+        'Maintenance Use': 'Fixes low gas pressure, removes carbon deposits'
+      }),
+      price: 650,
+      discount_price: 490,
+      stock_quantity: 50,
+      is_available: 1,
+      is_featured: 0,
+      is_published: 1,
+      primary_image: '/images/products/p17-stove-maintenance-kit.svg',
+      images: JSON.stringify(['/images/products/p17-stove-maintenance-kit.svg']),
+      meta_title: 'Gas Stove Nozzle Cleaning Needle Kit - Taj-e-Konain',
+      meta_description: 'Restore low flame power and fix stove jet clogs with stainless nozzle cleaning needles and brush set in Pakistan. WhatsApp order.'
+    },
+    {
+      sku: 'TK-CN-118',
+      name: 'Taj Solid Brass Gas Pipe Nipples & Quick Connectors (3 Pcs)',
+      slug: 'taj-solid-brass-gas-pipe-nipples-quick-connectors-3-pcs',
+      category_slug: 'gas-hoses-connectors',
+      short_description: 'Precision-threaded heavy brass gas pipe connectors, 90-degree elbows, and swivel barb nozzles for safe gas pipe connections.',
+      description: 'Prevent dangerous gas leaks at joint connections with genuine machined brass fittings. Includes one 90-degree swivel elbow (prevents hose kinking behind the stove), one straight barb nipple, and one female thread adapter.',
+      specifications: JSON.stringify({
+        'Material': 'Heavy High-Pressure Machined Brass',
+        'Included Fittings': '1x 360° Swivel Elbow, 1x Straight Nipple, 1x Coupler',
+        'Thread': 'Standard 1/2-inch BSP Male/Female threads',
+        'Leak Prevention': 'Barbed ridges provide airtight grip on rubber hoses'
+      }),
+      price: 850,
+      discount_price: 650,
+      stock_quantity: 40,
+      is_available: 1,
+      is_featured: 0,
+      is_published: 1,
+      primary_image: '/images/products/p18-brass-connector-nipples.svg',
+      images: JSON.stringify(['/images/products/p18-brass-connector-nipples.svg']),
+      meta_title: 'Solid Brass Gas Pipe Connectors 3 Pcs - Taj-e-Konain',
+      meta_description: 'Machined brass gas pipe connectors and swivel elbows in Pakistan. Secure, leak-proof hose fitting for stoves. Order on WhatsApp.'
+    }
+  ];
+
+  const insertProduct = db.prepare(`
+    INSERT INTO products (
+      sku, name, slug, category_id, category_slug, category_name,
+      short_description, description, specifications, price, discount_price,
+      stock_quantity, is_available, is_featured, is_published,
+      primary_image, images, meta_title, meta_description
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?,
+      ?, ?, ?, ?, ?,
+      ?, ?, ?, ?,
+      ?, ?, ?, ?
+    )
+    ON CONFLICT(sku) DO UPDATE SET
+      name=excluded.name,
+      slug=excluded.slug,
+      category_id=excluded.category_id,
+      category_slug=excluded.category_slug,
+      category_name=excluded.category_name,
+      short_description=excluded.short_description,
+      description=excluded.description,
+      specifications=excluded.specifications,
+      price=excluded.price,
+      discount_price=excluded.discount_price,
+      stock_quantity=excluded.stock_quantity,
+      is_available=excluded.is_available,
+      is_featured=excluded.is_featured,
+      is_published=excluded.is_published,
+      primary_image=excluded.primary_image,
+      images=excluded.images,
+      meta_title=excluded.meta_title,
+      meta_description=excluded.meta_description
+  `);
+
+  products.forEach(p => {
+    const cat = catMap[p.category_slug] || { id: null, name: 'General' };
+    insertProduct.run(
+      p.sku,
+      p.name,
+      p.slug,
+      cat.id,
+      p.category_slug,
+      cat.name,
+      p.short_description,
+      p.description,
+      p.specifications,
+      p.price,
+      p.discount_price,
+      p.stock_quantity,
+      p.is_available,
+      p.is_featured,
+      p.is_published,
+      p.primary_image,
+      p.images,
+      p.meta_title,
+      p.meta_description
+    );
+  });
+
+  console.log('--- Seeding Testimonials (Labeled Sample Data) ---');
+  const testimonials = [
+    {
+      customer_name: 'Muhammad Tariq',
+      customer_location: 'Lahore, Pakistan',
+      rating: 5,
+      review_text: 'Bought the double burner tempered glass stove. The blue flame power is fantastic, and ordering over WhatsApp was quick and effortless. Delivery arrived securely packed.',
+      product_purchased: 'Taj Premium Tempered Glass Double Burner Stove',
+      is_sample: 1,
+      is_published: 1
+    },
+    {
+      customer_name: 'Mrs. Farzana Akhtar',
+      customer_location: 'Karachi, Pakistan',
+      rating: 5,
+      review_text: 'We cook daily for a large family. The heavy-duty stainless steel stove handles our big karahis and pressure cookers without any shaking. Very sturdy build.',
+      product_purchased: 'Taj Heavy-Gauge Stainless Steel Double Burner Stove',
+      is_sample: 1,
+      is_published: 1
+    },
+    {
+      customer_name: 'Rashid Mehmood',
+      customer_location: 'Rawalpindi, Pakistan',
+      rating: 5,
+      review_text: 'Our dhaba needed a solid commercial burner that could burn all day without issues. The cast iron C-30 burner has incredible flame power and brass valves.',
+      product_purchased: 'Taj Heavy Cast Iron Commercial Cooking Burner',
+      is_sample: 1,
+      is_published: 1
+    },
+    {
+      customer_name: 'Engr. Bilal Khan',
+      customer_location: 'Islamabad, Pakistan',
+      rating: 5,
+      review_text: 'Replaced our old rubber pipe with their steel-wire braided hose and gas regulator with meter. Gives immense peace of mind regarding gas safety at home.',
+      product_purchased: 'Steel-Wire Braided Gas Hose & LPG Regulator',
+      is_sample: 1,
+      is_published: 1
+    }
+  ];
+
+  db.exec('DELETE FROM testimonials WHERE is_sample = 1');
+  const insertTestimonial = db.prepare(`
+    INSERT INTO testimonials (customer_name, customer_location, rating, review_text, product_purchased, is_sample, is_published)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+  testimonials.forEach(t => {
+    insertTestimonial.run(t.customer_name, t.customer_location, t.rating, t.review_text, t.product_purchased, t.is_sample, t.is_published);
+  });
+
+  console.log('--- Seeding Store Settings ---');
+  const defaultSettings = [
+    { key: 'store_name', value: 'Taj-e-Konain Gas Burner' },
+    { key: 'tagline', value: 'Quality Gas Stoves, Burners & Kitchen Essentials for Every Home' },
+    { key: 'whatsapp_number', value: WHATSAPP_NUMBER },
+    { key: 'phone_number', value: '03432833991' },
+    { key: 'email_address', value: 'contact@tajekonain.com' },
+    { key: 'address', value: 'House no.13/3 H area near, main Liaqat Market Rd, Model Colony H Area malir, Karachi, 75050' },
+    { key: 'city', value: 'Karachi' },
+    { key: 'postal_code', value: '75050' },
+    { key: 'google_maps_url', value: 'https://share.google/31m1BrmEBxjzaiXpg' },
+    { key: 'business_hours', value: 'Monday - Saturday: 9:00 AM - 9:00 PM | Sunday: Closed' },
+    { key: 'announcement_bar', value: '🔥 Fast Nationwide Delivery across Pakistan • Direct WhatsApp Ordering • Quality Assured Burners & Accessories' },
+    { key: 'hero_headline', value: 'Quality Gas Stoves & Kitchen Essentials for Every Home' },
+    { key: 'hero_subtext', value: 'Discover reliable gas burners, stylish stoves, and essential kitchen accessories at Taj-e-Konain Gas Burner. Explore our collection and order conveniently through WhatsApp.' },
+    { key: 'delivery_notice', value: 'Delivery charges and courier timelines will be confirmed directly on WhatsApp based on your city and order weight.' },
+    { key: 'facebook_url', value: 'https://facebook.com' },
+    { key: 'instagram_url', value: 'https://instagram.com' },
+    { key: 'production_domain', value: 'https://tajekonain.com' },
+    { key: 'meta_title_default', value: 'Taj-e-Konain Gas Burner | Gas Stoves, Burners & Kitchen Appliances in Pakistan' },
+    { key: 'meta_description_default', value: 'Buy top-quality gas stoves, double burners, stainless steel hobs, commercial burners, regulators, and gas accessories in Pakistan. Order directly on WhatsApp at 03432833991.' }
+  ];
+
+  const insertSetting = db.prepare(`
+    INSERT INTO store_settings (key, value)
+    VALUES (?, ?)
+    ON CONFLICT(key) DO UPDATE SET value=excluded.value
+  `);
+  defaultSettings.forEach(s => {
+    insertSetting.run(s.key, s.value);
+  });
+
+  console.log('--- Seeding FAQs ---');
+  const faqs = [
+    {
+      question: 'How do I place an order for gas stoves or accessories?',
+      answer: 'Ordering is as simple as sending a WhatsApp message! Browse our catalog, add items to your cart, or click "Order on WhatsApp" on any product page. When you confirm your cart, a prefilled WhatsApp message with your selected items, prices, and address will be created. Simply send the message to 03432833991, and our representative will confirm availability and delivery details.',
+      category: 'Ordering & Payment',
+      display_order: 1
+    },
+    {
+      question: 'Are your stoves compatible with Sui Gas (Natural Gas) or LPG cylinders?',
+      answer: 'Most of our stoves and hobs are designed to support both Natural Gas (Sui Gas) and LPG cylinders. Stoves are fitted with precision nozzles suited for standard Sui Gas pressure, and can easily be converted for LPG with our LPG nozzle kit. Please inform us about your gas type during WhatsApp ordering so we ensure proper calibration.',
+      category: 'Product Specifications',
+      display_order: 2
+    },
+    {
+      question: 'What are the delivery charges and delivery times across Pakistan?',
+      answer: 'Delivery charges vary depending on your destination city, package dimensions, and whether you order small accessories or heavy cast iron stoves. All final delivery fees and transit schedules will be confirmed clearly with you over WhatsApp before shipping.',
+      category: 'Shipping & Delivery',
+      display_order: 3
+    },
+    {
+      question: 'How do I fix a yellow flame or low heat on my existing burner?',
+      answer: 'A yellow flame typically occurs when dust, burnt grease, or oil spills clog the burner air vents or brass nozzle orifice. This causes incomplete combustion and black soot. You can clean the burner caps and clear the nozzle hole using our Stove Maintenance & Nozzle Cleaning Wire Kit, which restores a crisp, fuel-efficient blue flame.',
+      category: 'Maintenance & Troubleshooting',
+      display_order: 4
+    },
+    {
+      question: 'What safety precautions should I take with gas cylinders and regulators?',
+      answer: 'Always use certified low-pressure regulators with built-in pressure indicators for home cooking, and inspect rubber pipes regularly for cracks or brittleness. We strongly recommend our steel-wire braided safety hose, which prevents rodent damage and bursting. Never test for gas leaks with a flame; always use soapy water.',
+      category: 'Safety & Installation',
+      display_order: 5
+    },
+    {
+      question: 'What is your return or replacement policy for damaged items?',
+      answer: 'We inspect every item prior to dispatch. If your package arrives damaged during courier transit, please notify us within 24–48 hours on WhatsApp with photos or an unboxing video. We will coordinate an inspection and arrange a replacement or refund according to our policy.',
+      category: 'Returns & Warranty',
+      display_order: 6
+    }
+  ];
+
+  db.exec('DELETE FROM faqs');
+  const insertFaq = db.prepare(`
+    INSERT INTO faqs (question, answer, category, display_order, is_published)
+    VALUES (?, ?, ?, ?, 1)
+  `);
+  faqs.forEach(f => {
+    insertFaq.run(f.question, f.answer, f.category, f.display_order);
+  });
+
+  console.log('--- Seeding Policy & About Content Blocks ---');
+  const contentBlocks = [
+    {
+      page: 'about',
+      section_key: 'story',
+      title: 'About Taj-e-Konain Gas Burner',
+      content: `Taj-e-Konain Gas Burner is a dedicated Pakistani kitchen appliance and gas equipment store specializing in dependable gas stoves, commercial cooking burners, and high-quality gas safety accessories.
+
+Founded with a commitment to providing Pakistani households and caterers with reliable, safe, and fuel-efficient cooking solutions, our catalog features durable stainless steel stoves, stylish tempered glass double and triple burners, and heavy-duty cast iron burners designed for traditional, robust Pakistani cooking.
+
+We prioritize customer trust and convenience. That is why we provide personal, responsive customer assistance directly through WhatsApp, helping customers choose the right gas stove nozzles, safety regulators, and accessories for both Sui Gas (Natural Gas) and LPG cylinders.
+
+*(Note for Store Owner: You can customize your store story, history, milestone dates, and physical showroom location anytime directly from the Admin Dashboard at /admin).*`
+    },
+    {
+      page: 'shipping',
+      section_key: 'policy',
+      title: 'Shipping & Delivery Policy',
+      content: `At Taj-e-Konain Gas Burner, we deliver quality gas stoves, appliances, and accessories throughout Pakistan via dependable courier partners and logistics networks.
+
+### Order Confirmation
+After you submit your order inquiry on WhatsApp (03432833991), our customer support team will confirm stock availability, package dimensions, and the exact courier delivery fee to your city or tehsil.
+
+### Delivery Charges
+Because cooking stoves and heavy commercial burners differ substantially in weight from small accessories like knobs and brass caps, shipping charges are calculated per order weight and destination. The final shipping cost will be clearly communicated on WhatsApp before dispatch.
+
+### Delivery Timelines
+- Major Cities (Karachi, Lahore, Rawalpindi/Islamabad, Faisalabad, Gujranwala, Multan, Peshawar): Typically 2 to 4 business days.
+- Other Cities & Regional Towns: Typically 3 to 6 business days.
+
+*(Note: Weather, public holidays, or courier route delays may occasionally affect delivery schedules).*`
+    },
+    {
+      page: 'returns',
+      section_key: 'policy',
+      title: 'Returns & Refund Policy',
+      content: `Your satisfaction and kitchen safety are our top priorities at Taj-e-Konain Gas Burner.
+
+### Eligibility for Return or Exchange
+- Items must be reported within 48 hours of courier delivery.
+- Products must remain unused, uninstalled, and in their original packaging with all included accessories, clamps, and manuals.
+- Stoves or regulators that have been subjected to improper installation, tampering, or misuse are not eligible for return.
+
+### Damaged or Incorrect Products
+In the rare event that an item arrives damaged in transit or is not what you ordered, please contact us immediately on WhatsApp (03432833991) with clear photos or an unboxing video. We will promptly arrange an exchange or appropriate remedy.
+
+### Refund Processing
+Approved refunds are processed through agreed local banking or mobile payment channels after the returned item is inspected at our facility.`
+    },
+    {
+      page: 'privacy',
+      section_key: 'policy',
+      title: 'Privacy Policy',
+      content: `Taj-e-Konain Gas Burner respects the privacy of our visitors and customers.
+
+### Information We Collect
+When you browse our storefront, add items to your cart, or submit an order via WhatsApp or our contact form, we may collect your name, contact phone number, delivery address, and order preferences.
+
+### How We Use Your Information
+- To prepare, confirm, and deliver your orders.
+- To communicate with you regarding product availability, technical inquiries, and order tracking.
+- To improve our website performance, catalog, and customer service.
+
+We do not sell, rent, or trade your personal information to third parties. Customer details are strictly used to fulfill your purchase and provide after-sales assistance.`
+    },
+    {
+      page: 'terms',
+      section_key: 'policy',
+      title: 'Terms & Conditions',
+      content: `Welcome to the Taj-e-Konain Gas Burner website. By accessing or using this storefront, you agree to comply with and be bound by the following terms.
+
+### Catalog & Pricing Notice
+All product descriptions, specifications, sample inventory, and prices displayed on this website are published in Pakistani Rupees (PKR). While we strive for accuracy, all product availability, final pricing, and delivery fees must be confirmed directly with our store via WhatsApp before an order is binding.
+
+### Order Placement
+Placing an item in your shopping cart or clicking the WhatsApp order link creates an order inquiry message. The sale is finalized once you send the prepared WhatsApp message, and our representative confirms order acceptance, delivery fees, and shipping details.
+
+### Gas Appliance Safety
+Gas equipment must be installed properly using safe, leak-tested connections. Always follow safety instructions when connecting LPG cylinders or Sui Gas lines. Taj-e-Konain Gas Burner is not liable for accidents resulting from improper installation or neglected safety precautions.`
+    }
+  ];
+
+  db.exec('DELETE FROM content_blocks');
+  const insertContent = db.prepare(`
+    INSERT INTO content_blocks (page, section_key, title, content)
+    VALUES (?, ?, ?, ?)
+  `);
+  contentBlocks.forEach(b => {
+    insertContent.run(b.page, b.section_key, b.title, b.content);
+  });
+
+  console.log('--- Seeding Completed Successfully! ---');
+}
+
+// Run if called directly
+if (process.argv[1] && process.argv[1].endsWith('seed.js')) {
+  seedDatabase();
+}

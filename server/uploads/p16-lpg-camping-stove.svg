@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#e2e8f0" />
+    </linearGradient>
+    <linearGradient id="steelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#cbd5e1" />
+      <stop offset="50%" stop-color="#f1f5f9" />
+      <stop offset="100%" stop-color="#94a3b8" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ea580c" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="450" fill="url(#bgGrad)" />
+  <rect x="20" y="20" width="560" height="410" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" filter="url(#shadow)" />
+
+  <!-- Badge / Tag -->
+  <g transform="translate(40, 42)">
+    <rect x="0" y="0" width="130" height="24" rx="12" fill="#ea580c" />
+    <text x="65" y="16" font-family="'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="1">
+      PORTABLE
+    </text>
+  </g>
+
+  <!-- Model watermark -->
+  <text x="560" y="58" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" fill="#94a3b8" text-anchor="end" letter-spacing="1">
+    SKU: TK-CS-116
+  </text>
+
+  <!-- Product Graphic -->
+  <g>
+    
+      <!-- Portable Single Stove -->
+      <g transform="translate(300, 245)">
+        <rect x="-140" y="-70" width="280" height="140" rx="16" fill="#0f172a" stroke="#ea580c" stroke-width="3" />
+        <circle cx="-35" cy="0" r="48" fill="#1e293b" stroke="#d97706" stroke-width="3" />
+        <circle cx="-35" cy="0" r="24" fill="#b45309" />
+        <!-- Butane canister compartment door -->
+        <rect x="45" y="-55" width="80" height="110" rx="8" fill="#1e293b" stroke="#334155" stroke-width="2" />
+        <circle cx="85" cy="20" r="14" fill="#94a3b8" stroke="#475569" stroke-width="2" />
+        <line x1="85" y1="10" x2="85" y2="20" stroke="#ea580c" stroke-width="3" stroke-linecap="round" />
+      </g>
+    
+  </g>
+
+  <!-- Title & Subtitle at bottom -->
+  <g transform="translate(300, 395)">
+    <text x="0" y="0" font-family="'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="800" fill="#0f172a" text-anchor="middle">
+      Portable LPG Camping & Picnic Gas Stove
+    </text>
+    <text x="0" y="20" font-family="'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="600" fill="#64748b" text-anchor="middle">
+      Taj-e-Konain Gas Burner • Reliable Quality
+    </text>
+  </g>
+</svg>
