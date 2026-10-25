@@ -1,3 +1,6 @@
+// When deployed on Netlify, /api/* is proxied to Render via netlify.toml redirects.
+// When running locally, Vite proxies /api to localhost:5000 via vite.config.js.
+// VITE_API_URL env var is also supported as a fallback override.
 const API_BASE = import.meta.env.VITE_API_URL 
   ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api` 
   : '/api';
