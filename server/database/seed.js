@@ -106,11 +106,7 @@ export function seedDatabase() {
   const insertCategory = db.prepare(`
     INSERT INTO categories (name, slug, description, image_url, display_order)
     VALUES (?, ?, ?, ?, ?)
-    ON CONFLICT(slug) DO UPDATE SET
-      name=excluded.name,
-      description=excluded.description,
-      image_url=excluded.image_url,
-      display_order=excluded.display_order
+    ON CONFLICT(slug) DO NOTHING
   `);
 
   categories.forEach(cat => {
@@ -603,25 +599,7 @@ export function seedDatabase() {
       ?, ?, ?, ?,
       ?, ?, ?, ?
     )
-    ON CONFLICT(sku) DO UPDATE SET
-      name=excluded.name,
-      slug=excluded.slug,
-      category_id=excluded.category_id,
-      category_slug=excluded.category_slug,
-      category_name=excluded.category_name,
-      short_description=excluded.short_description,
-      description=excluded.description,
-      specifications=excluded.specifications,
-      price=excluded.price,
-      discount_price=excluded.discount_price,
-      stock_quantity=excluded.stock_quantity,
-      is_available=excluded.is_available,
-      is_featured=excluded.is_featured,
-      is_published=excluded.is_published,
-      primary_image=excluded.primary_image,
-      images=excluded.images,
-      meta_title=excluded.meta_title,
-      meta_description=excluded.meta_description
+    ON CONFLICT(sku) DO NOTHING
   `);
 
   products.forEach(p => {
@@ -689,19 +667,25 @@ export function seedDatabase() {
     }
   ];
 
-  db.exec('DELETE FROM testimonials WHERE is_sample = 1');
-  const insertTestimonial = db.prepare(`
-    INSERT INTO testimonials (customer_name, customer_location, rating, review_text, product_purchased, is_sample, is_published)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `);
-  testimonials.forEach(t => {
-    insertTestimonial.run(t.customer_name, t.customer_location, t.rating, t.review_text, t.product_purchased, t.is_sample, t.is_published);
-  });
+  const existingTestimonials = db.prepare('SELECT COUNT(*) as count FROM testimonials').get().count;
+  if (existingTestimonials === 0) {
+    const insertTestimonial = db.prepare(`
+      INSERT INTO testimonials (customer_name, customer_location, rating, review_text, product_purchased, is_sample, is_published)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+    testimonials.forEach(t => {
+      insertTestimonial.run(t.customer_name, t.customer_location, t.rating, t.review_text, t.product_purchased, t.is_sample, t.is_published);
+    });
+  }
 
   console.log('--- Seeding Store Settings ---');
   const defaultSettings = [
     { key: 'store_name', value: 'Taj-e-Konain Gas Burner' },
     { key: 'tagline', value: 'Quality Gas Stoves, Burners & Kitchen Essentials for Every Home' },
+    { key: 'logo_url', value: '/images/taj-logo.png' },
+    { key: 'hero_image', value: '/images/hero-banner.svg' },
+    { key: 'hero_bg_image', value: '' },
+    { key: 'hero_badge_text', value: 'Pakistani Gas Burner Specialists • Sui Gas & LPG Ready' },
     { key: 'whatsapp_number', value: WHATSAPP_NUMBER },
     { key: 'phone_number', value: '03432833991' },
     { key: 'email_address', value: 'contact@tajekonain.com' },
@@ -724,7 +708,7 @@ export function seedDatabase() {
   const insertSetting = db.prepare(`
     INSERT INTO store_settings (key, value)
     VALUES (?, ?)
-    ON CONFLICT(key) DO UPDATE SET value=excluded.value
+    ON CONFLICT(key) DO NOTHING
   `);
   defaultSettings.forEach(s => {
     insertSetting.run(s.key, s.value);
@@ -770,14 +754,16 @@ export function seedDatabase() {
     }
   ];
 
-  db.exec('DELETE FROM faqs');
-  const insertFaq = db.prepare(`
-    INSERT INTO faqs (question, answer, category, display_order, is_published)
-    VALUES (?, ?, ?, ?, 1)
-  `);
-  faqs.forEach(f => {
-    insertFaq.run(f.question, f.answer, f.category, f.display_order);
-  });
+  const existingFaqs = db.prepare('SELECT COUNT(*) as count FROM faqs').get().count;
+  if (existingFaqs === 0) {
+    const insertFaq = db.prepare(`
+      INSERT INTO faqs (question, answer, category, display_order, is_published)
+      VALUES (?, ?, ?, ?, 1)
+    `);
+    faqs.forEach(f => {
+      insertFaq.run(f.question, f.answer, f.category, f.display_order);
+    });
+  }
 
   console.log('--- Seeding Policy & About Content Blocks ---');
   const contentBlocks = [
@@ -861,10 +847,10 @@ Gas equipment must be installed properly using safe, leak-tested connections. Al
     }
   ];
 
-  db.exec('DELETE FROM content_blocks');
   const insertContent = db.prepare(`
     INSERT INTO content_blocks (page, section_key, title, content)
     VALUES (?, ?, ?, ?)
+    ON CONFLICT(page, section_key) DO NOTHING
   `);
   contentBlocks.forEach(b => {
     insertContent.run(b.page, b.section_key, b.title, b.content);

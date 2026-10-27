@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useSettings } from '../context/SettingsContext';
-import { formatPKR } from '../utils/formatters';
+import { formatPKR, getImageUrl } from '../utils/formatters';
 import SEOHelmet from '../components/common/SEOHelmet';
 import { 
   ShoppingBag, 
@@ -83,10 +83,10 @@ export default function CartPage() {
                   <div className="flex items-center gap-4 w-full sm:w-auto">
                     <div className="w-20 h-20 bg-slate-50 border border-slate-100 rounded-xl p-2 shrink-0 flex items-center justify-center">
                       <img
-                        src={item.primary_image}
+                        src={getImageUrl(item.primary_image, '/images/taj-logo.png')}
                         alt={item.name}
                         className="w-full h-full object-contain"
-                        onError={(e) => { e.target.src = '/images/logo-icon.svg'; }}
+                        onError={(e) => { e.target.src = '/images/taj-logo.png'; }}
                       />
                     </div>
                     <div>

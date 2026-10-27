@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useSettings } from '../../context/SettingsContext';
 import { getProductOrderUrl } from '../../services/whatsapp';
-import { formatPKR } from '../../utils/formatters';
+import { formatPKR, getImageUrl } from '../../utils/formatters';
 import { 
   ShoppingBag, 
   MessageSquare, 
@@ -24,7 +24,7 @@ export default function ProductCard({ product }) {
   const discountPercent = hasDiscount ? Math.round(((price - discountPrice) / price) * 100) : 0;
 
   const isAvailable = product.is_available && product.stock_quantity > 0;
-  const imageSrc = product.primary_image || (product.images && product.images[0]) || '/images/logo-icon.svg';
+  const imageSrc = getImageUrl(product.primary_image || (product.images && product.images[0]), '/images/taj-logo.png');
 
   const handleWhatsAppOrder = (e) => {
     e.preventDefault();
@@ -61,7 +61,7 @@ export default function ProductCard({ product }) {
           alt={product.name}
           className="w-full h-full object-contain group-hover:scale-106 transition-transform duration-500 ease-out"
           loading="lazy"
-          onError={(e) => { e.target.src = '/images/logo-icon.svg'; }}
+          onError={(e) => { e.target.src = '/images/taj-logo.png'; }}
         />
 
         {/* Top Badges */}

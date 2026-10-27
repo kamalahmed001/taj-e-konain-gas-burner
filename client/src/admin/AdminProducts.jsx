@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { api } from '../services/api';
-import { formatPKR } from '../utils/formatters';
+import { formatPKR, getImageUrl } from '../utils/formatters';
 import { 
   Plus, 
   Search, 
@@ -150,22 +150,58 @@ export default function AdminProducts() {
     setIsFormOpen(true);
   };
 
+  const compressImageFile = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1000;
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleImageFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     setUploadingImage(true);
     try {
-      const res = await api.uploadImage(file);
-      if (res && res.success && res.url) {
-        setFormData(prev => ({ ...prev, primary_image: res.url }));
-        showToast('Image uploaded successfully from your computer!');
-      } else {
-        alert(res?.message || 'Image upload failed');
-      }
+      showToast('Optimizing and loading product image...');
+      const base64Url = await compressImageFile(file);
+      setFormData(prev => ({ 
+        ...prev, 
+        primary_image: base64Url,
+        images: [base64Url]
+      }));
+      showToast('Product image loaded! Embedded and permanent.');
     } catch (err) {
-      console.error('Image upload error:', err);
-      alert('Error uploading image');
+      console.error('Image compression error:', err);
+      alert('Error loading image file');
     } finally {
       setUploadingImage(false);
     }
@@ -350,10 +386,10 @@ export default function AdminProducts() {
                   <td className="py-3 px-4">
                     <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-lg p-1 flex items-center justify-center">
                       <img
-                        src={p.primary_image || '/images/logo-icon.svg'}
+                        src={getImageUrl(p.primary_image, '/images/taj-logo.png')}
                         alt=""
                         className="w-full h-full object-contain"
-                        onError={(e) => { e.target.src = '/images/logo-icon.svg'; }}
+                        onError={(e) => { e.target.src = '/images/taj-logo.png'; }}
                       />
                     </div>
                   </td>
@@ -605,10 +641,10 @@ export default function AdminProducts() {
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-white border border-slate-200 rounded-xl p-1 flex items-center justify-center shrink-0">
                     <img
-                      src={formData.primary_image || '/images/logo-icon.svg'}
+                      src={getImageUrl(formData.primary_image, '/images/taj-logo.png')}
                       alt="Preview"
                       className="w-full h-full object-contain"
-                      onError={(e) => { e.target.src = '/images/logo-icon.svg'; }}
+                      onError={(e) => { e.target.src = '/images/taj-logo.png'; }}
                     />
                   </div>
 

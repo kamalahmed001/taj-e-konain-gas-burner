@@ -1,6 +1,7 @@
 import express from 'express';
 import db from '../database/db.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { autoSaveSnapshot } from './backup.js';
 
 const router = express.Router();
 
@@ -72,6 +73,7 @@ router.post('/', authenticateToken, (req, res) => {
 
     const result = stmt.run(name.trim(), slug, description, image_url, Number(display_order));
     const newCat = db.prepare('SELECT * FROM categories WHERE id = ?').get(result.lastInsertRowid);
+    autoSaveSnapshot();
 
     return res.status(201).json({ success: true, message: 'Category created', data: newCat });
   } catch (error) {
@@ -114,6 +116,7 @@ router.put('/:id', authenticateToken, (req, res) => {
     }
 
     const updated = db.prepare('SELECT * FROM categories WHERE id = ?').get(Number(id));
+    autoSaveSnapshot();
     return res.json({ success: true, message: 'Category updated', data: updated });
   } catch (error) {
     console.error('Error updating category:', error);
@@ -133,6 +136,7 @@ router.delete('/:id', authenticateToken, (req, res) => {
     // Set category_id = NULL on affected products
     db.prepare('UPDATE products SET category_id = NULL, category_slug = NULL, category_name = NULL WHERE category_id = ?').run(Number(id));
     db.prepare('DELETE FROM categories WHERE id = ?').run(Number(id));
+    autoSaveSnapshot();
 
     return res.json({ success: true, message: `Category '${existing.name}' deleted successfully.` });
   } catch (error) {

@@ -49,8 +49,8 @@ export default function AdminLogin() {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-orange-600/15 rounded-full blur-3xl pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 text-center space-y-3">
-        <div className="w-16 h-16 rounded-2xl bg-slate-900 border-2 border-orange-500/40 p-2 mx-auto flex items-center justify-center shadow-xl">
-          <img src="/images/logo-icon.svg" alt="Taj-e-Konain" className="w-full h-full object-contain" />
+        <div className="w-20 h-20 rounded-full bg-slate-900 border-2 border-amber-500/60 p-1 mx-auto flex items-center justify-center shadow-2xl overflow-hidden">
+          <img src="/images/taj-logo.png" alt="Taj-e-Konain" className="w-full h-full object-cover rounded-full" />
         </div>
         
         <div>

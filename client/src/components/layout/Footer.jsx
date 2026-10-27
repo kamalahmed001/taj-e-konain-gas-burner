@@ -11,7 +11,7 @@ import {
   Lock, 
   ExternalLink 
 } from 'lucide-react';
-import { formatPhone } from '../../utils/formatters';
+import { formatPhone, getImageUrl } from '../../utils/formatters';
 
 export default function Footer() {
   const { settings } = useSettings();
@@ -70,11 +70,16 @@ export default function Footer() {
           {/* Column 1: Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-900 border border-orange-500/40 p-1 flex items-center justify-center">
-                <img src="/images/logo-icon.svg" alt="Taj-e-Konain" className="w-full h-full object-contain" />
+              <div className="w-12 h-12 rounded-full bg-slate-900 border-2 border-amber-500/60 p-0.5 flex items-center justify-center overflow-hidden shadow-lg">
+                <img 
+                  src={getImageUrl(settings.logo_url, '/images/taj-logo.png')} 
+                  alt={settings.store_name || "Taj-e-Konain"} 
+                  className="w-full h-full object-cover rounded-full" 
+                  onError={(e) => { e.target.src = '/images/taj-logo.png'; }}
+                />
               </div>
               <div>
-                <span className="text-xl font-black text-white tracking-tight">TAJ-E-KONAIN</span>
+                <span className="text-xl font-black text-white tracking-tight">{settings.store_name ? settings.store_name.toUpperCase() : 'TAJ-E-KONAIN'}</span>
                 <span className="block text-xs font-bold text-orange-500 tracking-wider">GAS BURNER &amp; APPLIANCES</span>
               </div>
             </div>

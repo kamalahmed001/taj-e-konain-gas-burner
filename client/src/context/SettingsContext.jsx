@@ -6,6 +6,10 @@ const SettingsContext = createContext();
 const defaultSettings = {
   store_name: 'Taj-e-Konain Gas Burner',
   tagline: 'Quality Gas Stoves, Burners & Kitchen Essentials for Every Home',
+  logo_url: '/images/taj-logo.png',
+  hero_image: '/images/hero-banner.svg',
+  hero_bg_image: '',
+  hero_badge_text: 'Pakistani Gas Burner Specialists • Sui Gas & LPG Ready',
   whatsapp_number: '923432833991',
   phone_number: '03432833991',
   email_address: 'contact@tajekonain.com',

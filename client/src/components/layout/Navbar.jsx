@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useSettings } from '../../context/SettingsContext';
+import { getImageUrl } from '../../utils/formatters';
 import { 
   ShoppingBag, 
   Search, 
@@ -44,16 +45,17 @@ export default function Navbar() {
           
           {/* Brand Logo */}
           <Link to="/" className="flex items-center gap-3 group shrink-0">
-            <div className="w-12 h-12 rounded-xl bg-slate-900 border border-orange-500/40 p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
+            <div className="w-12 h-12 rounded-full bg-slate-950 border-2 border-amber-500/60 p-0.5 flex items-center justify-center shadow-md overflow-hidden group-hover:scale-105 transition-transform duration-300">
               <img 
-                src="/images/logo-icon.svg" 
-                alt="Taj-e-Konain Emblem" 
-                className="w-full h-full object-contain" 
+                src={getImageUrl(settings.logo_url, '/images/taj-logo.png')} 
+                alt={settings.store_name || "Taj-e-Konain"} 
+                className="w-full h-full object-cover rounded-full" 
+                onError={(e) => { e.target.src = '/images/taj-logo.png'; }}
               />
             </div>
             <div className="flex flex-col">
               <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-none">
-                TAJ-E-KONAIN
+                {settings.store_name ? settings.store_name.toUpperCase() : 'TAJ-E-KONAIN'}
               </span>
               <span className="text-xs font-extrabold tracking-widest text-orange-600 mt-1 uppercase">
                 GAS BURNER &amp; APPLIANCES

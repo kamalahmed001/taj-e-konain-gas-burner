@@ -6,7 +6,7 @@
   command = "npm run build"
 
 [build.environment]
-  VITE_API_URL = "https://taj-e-konain-gas-burner.onrender.com"
+  VITE_API_URL = "https://taj-e-konain-gas-burner.onrender.com/"
 
 # Proxy /api calls to Render backend (avoids CORS, avoids env var issues)
 [[redirects]]

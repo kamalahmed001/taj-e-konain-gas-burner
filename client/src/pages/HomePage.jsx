@@ -18,7 +18,7 @@ import {
   HelpCircle,
   Compass
 } from 'lucide-react';
-import { formatPhone } from '../utils/formatters';
+import { formatPhone, getImageUrl } from '../utils/formatters';
 
 export default function HomePage() {
   const { settings } = useSettings();
@@ -88,7 +88,14 @@ export default function HomePage() {
       />
 
       {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white pt-12 pb-20 sm:pb-28">
+      <section 
+        className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white pt-12 pb-20 sm:pb-28"
+        style={settings.hero_bg_image ? {
+          backgroundImage: `linear-gradient(to bottom, rgba(2, 6, 23, 0.88), rgba(15, 23, 42, 0.94)), url(${getImageUrl(settings.hero_bg_image)})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        } : undefined}
+      >
         
         {/* Decorative background glow */}
         <div className="absolute top-1/4 right-0 w-96 h-96 bg-orange-600/15 rounded-full blur-3xl pointer-events-none" />
@@ -103,16 +110,12 @@ export default function HomePage() {
               {/* Trust Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/80 border border-orange-500/30 text-orange-400 text-xs sm:text-sm font-semibold shadow-inner">
                 <Flame className="w-4 h-4 text-orange-500 animate-pulse" />
-                <span>Pakistani Gas Burner Specialists • Sui Gas &amp; LPG Ready</span>
+                <span>{settings.hero_badge_text || 'Pakistani Gas Burner Specialists • Sui Gas & LPG Ready'}</span>
               </div>
 
               {/* Main Headline */}
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight sm:leading-none text-white">
-                Quality Gas Stoves &amp;{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500">
-                  Kitchen Essentials
-                </span>{' '}
-                for Every Home
+                {settings.hero_headline || 'Quality Gas Stoves & Kitchen Essentials for Every Home'}
               </h1>
 
               {/* Supporting Subtext */}
@@ -137,7 +140,7 @@ export default function HomePage() {
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base px-7 py-4 rounded-xl shadow-lg hover:shadow-emerald-600/30 transition-all duration-300 hover:scale-102 active:scale-98"
                 >
                   <PhoneCall className="w-5 h-5" />
-                  <span>WhatsApp Order (03432833991)</span>
+                  <span>WhatsApp Order ({formatPhone(settings.phone_number || '03432833991')})</span>
                 </a>
               </div>
 
@@ -163,10 +166,10 @@ export default function HomePage() {
             <div className="lg:col-span-5 relative">
               <div className="relative mx-auto max-w-lg rounded-3xl overflow-hidden border-2 border-slate-800 bg-slate-900/90 shadow-2xl p-4">
                 <img
-                  src="/images/hero-banner.svg"
-                  alt="Taj-e-Konain Gas Burner Kitchen Stoves"
+                  src={getImageUrl(settings.hero_image, '/images/hero-banner.svg')}
+                  alt={settings.hero_headline || "Taj-e-Konain Gas Burner Kitchen Stoves"}
                   className="w-full h-auto object-cover rounded-2xl"
-                  priority="true"
+                  onError={(e) => { e.target.src = '/images/hero-banner.svg'; }}
                 />
                 
                 {/* Float Card */}
@@ -216,10 +219,10 @@ export default function HomePage() {
             >
               <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-100 p-2.5 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <img
-                  src={cat.image_url || '/images/logo-icon.svg'}
+                  src={getImageUrl(cat.image_url, '/images/taj-logo.png')}
                   alt={cat.name}
                   className="w-full h-full object-contain"
-                  onError={(e) => { e.target.src = '/images/logo-icon.svg'; }}
+                  onError={(e) => { e.target.src = '/images/taj-logo.png'; }}
                 />
               </div>
               <div>

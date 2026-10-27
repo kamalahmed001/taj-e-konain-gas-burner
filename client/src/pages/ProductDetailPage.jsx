@@ -4,7 +4,7 @@ import { api } from '../services/api';
 import { useCart } from '../context/CartContext';
 import { useSettings } from '../context/SettingsContext';
 import { getProductOrderUrl } from '../services/whatsapp';
-import { formatPKR } from '../utils/formatters';
+import { formatPKR, getImageUrl } from '../utils/formatters';
 import ProductCard from '../components/product/ProductCard';
 import SEOHelmet from '../components/common/SEOHelmet';
 import { 
@@ -43,7 +43,8 @@ export default function ProductDetailPage() {
         const res = await api.getProduct(slug);
         if (res && res.success && res.data) {
           setProduct(res.data);
-          setSelectedImage(res.data.primary_image || (res.data.images && res.data.images[0]) || '/images/logo-icon.svg');
+          const rawImg = res.data.primary_image || (res.data.images && res.data.images[0]);
+          setSelectedImage(getImageUrl(rawImg, '/images/taj-logo.png'));
           setRelated(res.related || []);
         } else {
           setError('Product not found');
@@ -107,9 +108,9 @@ export default function ProductDetailPage() {
   const hasDiscount = discountPrice && discountPrice < price;
   const isAvailable = product.is_available && product.stock_quantity > 0;
 
-  const imagesList = (product.images && product.images.length > 0) 
+  const imagesList = ((product.images && product.images.length > 0) 
     ? product.images 
-    : [product.primary_image || '/images/logo-icon.svg'];
+    : [product.primary_image || '/images/taj-logo.png']).map(img => getImageUrl(img, '/images/taj-logo.png'));
 
   const handleWhatsAppOrder = () => {
     const orderUrl = getProductOrderUrl({
@@ -189,7 +190,7 @@ export default function ProductDetailPage() {
               src={selectedImage}
               alt={product.name}
               className="w-full h-full object-contain transition-all duration-300"
-              onError={(e) => { e.target.src = '/images/logo-icon.svg'; }}
+              onError={(e) => { e.target.src = '/images/taj-logo.png'; }}
             />
 
             {hasDiscount && (

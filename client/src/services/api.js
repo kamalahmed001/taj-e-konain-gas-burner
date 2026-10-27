@@ -260,5 +260,29 @@ export const api = {
       headers: getAuthHeaders()
     });
     return res.json();
+  },
+
+  // Backup & Restore
+  async exportBackup() {
+    const res = await fetch(`${API_BASE}/backup/export`, {
+      headers: getAuthHeaders()
+    });
+    return res.json();
+  },
+
+  async importBackup(data) {
+    const res = await fetch(`${API_BASE}/backup/import`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  },
+
+  async getBackupStatus() {
+    const res = await fetch(`${API_BASE}/backup/status`, {
+      headers: getAuthHeaders()
+    });
+    return res.json();
   }
 };

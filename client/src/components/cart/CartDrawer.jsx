@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
-import { formatPKR } from '../../utils/formatters';
+import { formatPKR, getImageUrl } from '../../utils/formatters';
 import { 
   X, 
   Trash2, 
@@ -90,10 +90,10 @@ export default function CartDrawer() {
                     {/* Thumbnail */}
                     <div className="w-20 h-20 rounded-lg bg-slate-50 border border-slate-100 p-1 shrink-0 flex items-center justify-center overflow-hidden">
                       <img
-                        src={item.primary_image}
+                        src={getImageUrl(item.primary_image, '/images/taj-logo.png')}
                         alt={item.name}
                         className="w-full h-full object-contain"
-                        onError={(e) => { e.target.src = '/images/logo-icon.svg'; }}
+                        onError={(e) => { e.target.src = '/images/taj-logo.png'; }}
                       />
                     </div>
 

@@ -16,7 +16,8 @@ import contactRoutes from './routes/contact.js';
 import uploadRoutes from './routes/upload.js';
 import statsRoutes from './routes/stats.js';
 import seoRoutes from './routes/seo.js';
-import './database/db.js'; // Ensure database schema is initialized
+import backupRoutes, { restoreFromBackupData } from './routes/backup.js';
+import db from './database/db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -56,6 +57,24 @@ app.use('/api/content', contentRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/backup', backupRoutes);
+
+// Auto-restore from snapshot.json if store.db is empty
+const snapshotPath = path.resolve(__dirname, 'database/snapshot.json');
+if (fs.existsSync(snapshotPath)) {
+  try {
+    const raw = fs.readFileSync(snapshotPath, 'utf-8');
+    const parsed = JSON.parse(raw);
+    const prodCount = db.prepare('SELECT COUNT(*) as count FROM products').get().count;
+    if (prodCount === 0 && parsed.data?.products?.length > 0) {
+      console.log('Restoring catalog from snapshot.json...');
+      restoreFromBackupData(parsed);
+      console.log('Successfully restored catalog from snapshot.json');
+    }
+  } catch (err) {
+    console.warn('Could not restore from snapshot:', err.message);
+  }
+}
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

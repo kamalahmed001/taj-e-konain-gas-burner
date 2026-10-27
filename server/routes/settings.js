@@ -1,6 +1,7 @@
 import express from 'express';
 import db from '../database/db.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { autoSaveSnapshot } from './backup.js';
 
 const router = express.Router();
 
@@ -58,6 +59,8 @@ router.put('/', authenticateToken, (req, res) => {
     const rows = db.prepare('SELECT key, value FROM store_settings').all();
     const updated = {};
     rows.forEach(r => { updated[r.key] = r.value; });
+
+    autoSaveSnapshot();
 
     return res.json({
       success: true,

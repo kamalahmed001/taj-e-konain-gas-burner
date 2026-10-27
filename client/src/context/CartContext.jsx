@@ -61,7 +61,7 @@ export function CartProvider({ children }) {
             slug: product.slug,
             price: Number(product.price),
             discount_price: product.discount_price ? Number(product.discount_price) : null,
-            primary_image: product.primary_image || (product.images && product.images[0]) || '/images/logo-icon.svg',
+            primary_image: product.primary_image || (product.images && product.images[0]) || '/images/taj-logo.png',
             stock_quantity: product.stock_quantity || 10,
             quantity: qty
           }

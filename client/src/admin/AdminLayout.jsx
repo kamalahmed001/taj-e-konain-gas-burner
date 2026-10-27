@@ -84,8 +84,8 @@ export default function AdminLayout() {
         <div className="p-6">
           {/* Brand */}
           <Link to="/" target="_blank" className="flex items-center gap-3 mb-8 group">
-            <div className="w-10 h-10 rounded-xl bg-slate-900 border border-orange-500/40 p-1.5 flex items-center justify-center group-hover:scale-105 transition-transform">
-              <img src="/images/logo-icon.svg" alt="Taj-e-Konain" className="w-full h-full object-contain" />
+            <div className="w-11 h-11 rounded-full bg-slate-900 border-2 border-amber-500/60 p-0.5 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform">
+              <img src="/images/taj-logo.png" alt="Taj-e-Konain" className="w-full h-full object-cover rounded-full" />
             </div>
             <div>
               <span className="text-base font-black text-white block tracking-tight leading-none">TAJ-E-KONAIN</span>

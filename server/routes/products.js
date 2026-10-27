@@ -1,6 +1,7 @@
 import express from 'express';
 import db from '../database/db.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { autoSaveSnapshot } from './backup.js';
 
 const router = express.Router();
 
@@ -283,6 +284,7 @@ router.post('/', authenticateToken, (req, res) => {
     );
 
     const newProduct = db.prepare('SELECT * FROM products WHERE id = ?').get(result.lastInsertRowid);
+    autoSaveSnapshot();
 
     return res.status(201).json({
       success: true,
@@ -391,6 +393,7 @@ router.put('/:id', authenticateToken, (req, res) => {
     );
 
     const updated = db.prepare('SELECT * FROM products WHERE id = ?').get(Number(id));
+    autoSaveSnapshot();
 
     return res.json({
       success: true,
@@ -413,6 +416,7 @@ router.delete('/:id', authenticateToken, (req, res) => {
     }
 
     db.prepare('DELETE FROM products WHERE id = ?').run(Number(id));
+    autoSaveSnapshot();
     return res.json({ success: true, message: `Product '${existing.name}' deleted successfully.` });
   } catch (error) {
     console.error('Error deleting product:', error);

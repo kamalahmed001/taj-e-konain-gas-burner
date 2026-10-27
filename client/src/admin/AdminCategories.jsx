@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import { getImageUrl } from '../utils/formatters';
 import { Plus, Edit, Trash2, X, CheckCircle, Tags, Upload } from 'lucide-react';
 
 export default function AdminCategories() {
@@ -90,6 +91,40 @@ export default function AdminCategories() {
     }
   };
 
+  const handleCatImageUpload = (file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 800;
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        setFormData(prev => ({ ...prev, image_url: dataUrl }));
+        showToast('Category image loaded!');
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleDelete = async (id) => {
     try {
       const res = await api.deleteCategory(id);
@@ -151,7 +186,12 @@ export default function AdminCategories() {
               <tr key={c.id} className="hover:bg-slate-50/70 transition-colors">
                 <td className="py-3 px-4">
                   <div className="w-10 h-10 bg-slate-50 border border-slate-100 rounded-lg p-1 flex items-center justify-center">
-                    <img src={c.image_url || '/images/logo-icon.svg'} alt="" className="w-full h-full object-contain" />
+                    <img 
+                      src={getImageUrl(c.image_url, '/images/taj-logo.png')} 
+                      alt="" 
+                      className="w-full h-full object-contain" 
+                      onError={(e) => { e.target.src = '/images/taj-logo.png'; }}
+                    />
                   </div>
                 </td>
                 <td className="py-3 px-4 font-bold text-slate-900">
@@ -239,25 +279,47 @@ export default function AdminCategories() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="block text-xs font-bold text-slate-700">Image Path</label>
-                  <input
-                    type="text"
-                    value={formData.image_url}
-                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border rounded-xl text-xs outline-hidden"
-                  />
+              <div className="space-y-2 border border-slate-200 rounded-xl p-3 bg-slate-50">
+                <label className="block text-xs font-bold text-slate-700">Category Image</label>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white border border-slate-200 rounded-lg p-1 flex items-center justify-center shrink-0">
+                    <img
+                      src={getImageUrl(formData.image_url, '/images/taj-logo.png')}
+                      alt=""
+                      className="w-full h-full object-contain"
+                      onError={(e) => { e.target.src = '/images/taj-logo.png'; }}
+                    />
+                  </div>
+                  <div className="flex-1 space-y-1.5">
+                    <label className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white text-2xs font-bold px-3 py-1.5 rounded-lg cursor-pointer">
+                      <Upload className="w-3 h-3 text-orange-400" />
+                      <span>Choose Image File</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleCatImageUpload(e.target.files[0])}
+                        className="hidden"
+                      />
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="/images/categories/... or data:image/..."
+                      value={formData.image_url}
+                      onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                      className="w-full px-2.5 py-1 bg-white border rounded-lg text-2xs font-mono"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="block text-xs font-bold text-slate-700">Display Order</label>
-                  <input
-                    type="number"
-                    value={formData.display_order}
-                    onChange={(e) => setFormData({ ...formData, display_order: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border rounded-xl text-xs outline-hidden"
-                  />
-                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-slate-700">Display Order</label>
+                <input
+                  type="number"
+                  value={formData.display_order}
+                  onChange={(e) => setFormData({ ...formData, display_order: e.target.value })}
+                  className="w-full px-3 py-2 bg-slate-50 border rounded-xl text-xs outline-hidden"
+                />
               </div>
 
               <div className="flex justify-end gap-3 pt-3 border-t">
