@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "exported_at": "2026-10-27T22:07:15.926Z",
+  "exported_at": "2026-10-28T20:54:48.415Z",
   "store": "Taj-e-Konain Gas Burner",
   "data": {
     "categories": [
@@ -11,7 +11,7 @@
         "description": "Reliable and durable two-burner stoves in tempered glass and stainless steel finishes for everyday home cooking.",
         "image_url": "/images/categories/cat-double-burners.svg",
         "display_order": 1,
-        "created_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:39"
       },
       {
         "id": 2,
@@ -20,7 +20,7 @@
         "description": "Spacious triple-burner stoves designed for busy family kitchens and simultaneous multi-dish cooking.",
         "image_url": "/images/categories/cat-triple-burners.svg",
         "display_order": 2,
-        "created_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:39"
       },
       {
         "id": 3,
@@ -29,7 +29,7 @@
         "description": "Sleek, modern drop-in kitchen hobs with auto-ignition and triple-ring high-efficiency flame burners.",
         "image_url": "/images/categories/cat-builtin-hobs.svg",
         "display_order": 3,
-        "created_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:39"
       },
       {
         "id": 4,
@@ -38,7 +38,7 @@
         "description": "Heavy-gauge, rust-resistant stainless steel body stoves engineered for long-lasting Pakistani kitchen use.",
         "image_url": "/images/categories/cat-double-burners.svg",
         "display_order": 4,
-        "created_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:39"
       },
       {
         "id": 5,
@@ -47,7 +47,7 @@
         "description": "Compact single-burner table stoves and portable LPG burners ideal for tea stalls, small spaces, and outdoor use.",
         "image_url": "/images/categories/cat-accessories.svg",
         "display_order": 5,
-        "created_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:39"
       },
       {
         "id": 6,
@@ -56,7 +56,7 @@
         "description": "Industrial-grade cast iron cooking burners for restaurants, catering events, hotels, and large cauldrons (deghs).",
         "image_url": "/images/categories/cat-commercial.svg",
         "display_order": 6,
-        "created_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:39"
       },
       {
         "id": 7,
@@ -65,7 +65,7 @@
         "description": "Certified low-pressure and high-pressure LPG regulators, auto-cutoff safety valves, and pressure gauge meters.",
         "image_url": "/images/categories/cat-regulators.svg",
         "display_order": 7,
-        "created_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:39"
       },
       {
         "id": 8,
@@ -74,7 +74,7 @@
         "description": "Heavy steel-wire braided safety hoses, brass hose nipples, T-joints, and leak-proof gas pipe clamps.",
         "image_url": "/images/categories/cat-accessories.svg",
         "display_order": 8,
-        "created_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:39"
       },
       {
         "id": 9,
@@ -83,7 +83,7 @@
         "description": "Pure brass burner caps, flame spreader rings, and heavy cast iron anti-slip pan support trivets.",
         "image_url": "/images/categories/cat-accessories.svg",
         "display_order": 9,
-        "created_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:39"
       },
       {
         "id": 10,
@@ -92,7 +92,7 @@
         "description": "D-type universal stove knobs, piezoelectric spark igniters, micro switches, and brass nozzle jets.",
         "image_url": "/images/categories/cat-accessories.svg",
         "display_order": 10,
-        "created_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:39"
       }
     ],
     "products": [
@@ -117,8 +117,8 @@
         "images": "[\"/images/products/p1-double-burner-glass.svg\"]",
         "meta_title": "Taj Tempered Glass Double Burner Stove - Taj-e-Konain",
         "meta_description": "Buy premium tempered glass double burner gas stove in Pakistan. Auto ignition, pure brass burners, Sui gas & LPG ready. Order on WhatsApp.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 2,
@@ -141,8 +141,8 @@
         "images": "[\"/images/products/p2-double-burner-steel.svg\"]",
         "meta_title": "Stainless Steel Double Burner Gas Stove - Taj-e-Konain",
         "meta_description": "Heavy duty stainless steel 2-burner gas stove for Pakistani kitchens. Durable, rust-free, supports heavy cooking. Instant WhatsApp order.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 3,
@@ -165,8 +165,8 @@
         "images": "[\"/images/products/p3-triple-burner-glass.svg\"]",
         "meta_title": "3-Burner Glass Top Gas Stove Pakistan - Taj-e-Konain",
         "meta_description": "Shop 3-burner gas stove in Pakistan with 8mm tempered glass, triple-flame burners, and auto ignition. Order directly via WhatsApp.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 4,
@@ -189,8 +189,8 @@
         "images": "[\"/images/products/p4-four-burner-hob.svg\"]",
         "meta_title": "4-Burner Built-in Gas Hob Pakistan - Taj-e-Konain",
         "meta_description": "Modern 4-burner kitchen built-in gas hob with triple-ring wok burner, cast iron grates, and toughened glass. Inquire via WhatsApp.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 5,
@@ -213,8 +213,8 @@
         "images": "[\"/images/products/p5-builtin-hob-stainless.svg\"]",
         "meta_title": "Stainless Steel 3-Burner Gas Hob - Taj-e-Konain",
         "meta_description": "High quality drop-in stainless steel 3-burner gas hob in Pakistan. Rust-proof, easy maintenance, strong pan support. Order on WhatsApp.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 6,
@@ -237,8 +237,8 @@
         "images": "[\"/images/products/p6-single-burner-portable.svg\"]",
         "meta_title": "Single Burner Auto-Ignition Gas Stove - Taj-e-Konain",
         "meta_description": "Affordable and compact single burner gas stove in Pakistan with automatic ignition. Reliable burner for tea and small cooking.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 7,
@@ -261,8 +261,8 @@
         "images": "[\"/images/products/p7-commercial-cast-iron.svg\"]",
         "meta_title": "Commercial Cast Iron Gas Burner C30 - Taj-e-Konain",
         "meta_description": "Heavy duty commercial cast iron gas stove burner for restaurants and catering in Pakistan. High flame output, dual brass valves.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 8,
@@ -285,8 +285,8 @@
         "images": "[\"/images/products/p8-heavy-duty-catering.svg\"]",
         "meta_title": "Heavy Duty Catering Stove Stand - Taj-e-Konain",
         "meta_description": "Industrial hotel and catering gas stove stand in Pakistan. Sturdy frame for heavy degh cooking, dual ring burners, WhatsApp delivery.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 9,
@@ -309,8 +309,8 @@
         "images": "[\"/images/products/p9-gas-regulator-meter.svg\"]",
         "meta_title": "LPG Gas Regulator with Meter Pakistan - Taj-e-Konain",
         "meta_description": "Buy certified LPG cylinder gas regulator with pressure meter in Pakistan. Auto safety shutoff, leak prevention. Inquire via WhatsApp.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 10,
@@ -333,8 +333,8 @@
         "images": "[\"/images/products/p10-high-pressure-regulator.svg\"]",
         "meta_title": "High Pressure Gas Regulator Commercial - Taj-e-Konain",
         "meta_description": "Commercial high pressure gas regulator for tandoor, hotel burners and catering in Pakistan. Brass build, adjustable flame control.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 11,
@@ -357,8 +357,8 @@
         "images": "[\"/images/products/p11-gas-hose-braided.svg\"]",
         "meta_title": "Steel Braided Gas Hose Pipe 2m Pakistan - Taj-e-Konain",
         "meta_description": "Rodent-proof, flame-resistant braided steel wire gas hose pipe in Pakistan. Comes with safety clamps. WhatsApp order available.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 12,
@@ -381,8 +381,8 @@
         "images": "[\"/images/products/p12-heavy-brass-burner-cap.svg\"]",
         "meta_title": "Pure Brass Gas Stove Burner Caps Set - Taj-e-Konain",
         "meta_description": "Solid brass burner cap and flame ring replacement set in Pakistan. Fix yellow flames, restore blue flame heat. Fast WhatsApp order.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 13,
@@ -405,8 +405,8 @@
         "images": "[\"/images/products/p13-cast-iron-pan-trivet.svg\"]",
         "meta_title": "Cast Iron Stove Trivet Stand Pakistan - Taj-e-Konain",
         "meta_description": "Non-slip heavy cast iron trivet pan support stand for gas stoves in Pakistan. Includes wok adapter ring. Order on WhatsApp.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 14,
@@ -429,8 +429,8 @@
         "images": "[\"/images/products/p14-stove-knobs-set.svg\"]",
         "meta_title": "Universal Gas Stove Knobs Pack of 2 - Taj-e-Konain",
         "meta_description": "High heat resistant metallic replacement knobs for gas stoves and hobs in Pakistan. Universal D-shaft fit. Inquire on WhatsApp.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 15,
@@ -453,8 +453,8 @@
         "images": "[\"/images/products/p15-spark-igniter-kit.svg\"]",
         "meta_title": "Stove Auto Ignition Spark Kit Pakistan - Taj-e-Konain",
         "meta_description": "Piezo auto ignition spark replacement electrode and trigger kit for gas stoves in Pakistan. Keep stoves lighting without matches.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 16,
@@ -477,8 +477,8 @@
         "images": "[\"/images/products/p16-lpg-camping-stove.svg\"]",
         "meta_title": "Portable Camping Gas Stove with Box - Taj-e-Konain",
         "meta_description": "Compact portable camping and outdoor picnic gas stove with carry box in Pakistan. Easy to travel with, order through WhatsApp.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 17,
@@ -501,8 +501,8 @@
         "images": "[\"/images/products/p17-stove-maintenance-kit.svg\"]",
         "meta_title": "Gas Stove Nozzle Cleaning Needle Kit - Taj-e-Konain",
         "meta_description": "Restore low flame power and fix stove jet clogs with stainless nozzle cleaning needles and brush set in Pakistan. WhatsApp order.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "id": 18,
@@ -525,125 +525,125 @@
         "images": "[\"/images/products/p18-brass-connector-nipples.svg\"]",
         "meta_title": "Solid Brass Gas Pipe Connectors 3 Pcs - Taj-e-Konain",
         "meta_description": "Machined brass gas pipe connectors and swivel elbows in Pakistan. Secure, leak-proof hose fitting for stoves. Order on WhatsApp.",
-        "created_at": "2026-10-23 22:41:05",
-        "updated_at": "2026-10-23 22:41:05"
+        "created_at": "2026-10-28 20:54:40",
+        "updated_at": "2026-10-28 20:54:40"
       }
     ],
     "settings": [
       {
         "key": "store_name",
         "value": "Taj-e-Konain Gas Burner",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "tagline",
         "value": "Quality Gas Stoves, Burners & Kitchen Essentials for Every Home",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "whatsapp_number",
         "value": "923432833991",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "phone_number",
         "value": "03432833991",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "email_address",
         "value": "contact@tajekonain.com",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "address",
         "value": "House no.13/3 H area near, main Liaqat Market Rd, Model Colony H Area malir, Karachi, 75050",
-        "updated_at": "2026-10-23 23:09:28"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "city",
         "value": "Karachi",
-        "updated_at": "2026-10-23 23:09:28"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "business_hours",
         "value": "Monday - Saturday: 9:00 AM - 9:00 PM | Sunday: Closed",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "announcement_bar",
         "value": "🔥 Fast Nationwide Delivery across Pakistan • Direct WhatsApp Ordering • Quality Assured Burners & Accessories",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "hero_headline",
         "value": "Quality Gas Stoves & Kitchen Essentials for Every Home",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "hero_subtext",
         "value": "Discover reliable gas burners, stylish stoves, and essential kitchen accessories at Taj-e-Konain Gas Burner. Explore our collection and order conveniently through WhatsApp.",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "delivery_notice",
         "value": "Delivery charges and courier timelines will be confirmed directly on WhatsApp based on your city and order weight.",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "facebook_url",
         "value": "https://facebook.com",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "instagram_url",
         "value": "https://instagram.com",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "production_domain",
         "value": "https://tajekonain.com",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "meta_title_default",
         "value": "Taj-e-Konain Gas Burner | Gas Stoves, Burners & Kitchen Appliances in Pakistan",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "meta_description_default",
         "value": "Buy top-quality gas stoves, double burners, stainless steel hobs, commercial burners, regulators, and gas accessories in Pakistan. Order directly on WhatsApp at 03432833991.",
-        "updated_at": "2026-10-23 22:41:05"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "google_maps_url",
         "value": "https://share.google/31m1BrmEBxjzaiXpg",
-        "updated_at": "2026-10-23 23:09:28"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "logo_url",
         "value": "/images/taj-logo.png",
-        "updated_at": "2026-10-27 22:03:53"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "hero_image",
         "value": "/images/hero-banner.svg",
-        "updated_at": "2026-10-27 22:03:53"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "hero_bg_image",
         "value": "",
-        "updated_at": "2026-10-27 22:03:53"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "hero_badge_text",
         "value": "Pakistani Gas Burner Specialists • Sui Gas & LPG Ready",
-        "updated_at": "2026-10-27 22:03:53"
+        "updated_at": "2026-10-28 20:54:40"
       },
       {
         "key": "postal_code",
         "value": "75050",
-        "updated_at": "2026-10-27 22:03:53"
+        "updated_at": "2026-10-28 20:54:40"
       }
     ],
     "testimonials": [

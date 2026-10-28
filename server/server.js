@@ -18,6 +18,7 @@ import statsRoutes from './routes/stats.js';
 import seoRoutes from './routes/seo.js';
 import backupRoutes, { restoreFromBackupData } from './routes/backup.js';
 import db from './database/db.js';
+import { pullFromTurso } from './database/turso.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -75,6 +76,16 @@ if (fs.existsSync(snapshotPath)) {
     console.warn('Could not restore from snapshot:', err.message);
   }
 }
+
+// Pull latest products, categories, and settings from Turso cloud on boot
+pullFromTurso().then((synced) => {
+  if (synced) console.log('✅ Synchronized database with Turso cloud.');
+}).catch((e) => console.warn('Turso initial pull notice:', e.message));
+
+// Background periodic sync every 5 minutes
+setInterval(() => {
+  pullFromTurso().catch(() => {});
+}, 300000);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -1,6 +1,7 @@
 import express from 'express';
 import db from '../database/db.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { pushFullStoreToTurso } from '../database/turso.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -128,11 +129,12 @@ export function restoreFromBackupData(backupData) {
   return true;
 }
 
-// Auto-save snapshot on any DB change
+// Auto-save snapshot on any DB change & sync to Turso cloud
 export function autoSaveSnapshot() {
   try {
     const data = getFullBackupData();
     fs.writeFileSync(snapshotPath, JSON.stringify(data, null, 2), 'utf-8');
+    pushFullStoreToTurso().catch(() => {});
   } catch (e) {
     // Non-fatal
   }
