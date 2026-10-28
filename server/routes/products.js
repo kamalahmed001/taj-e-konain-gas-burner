@@ -2,6 +2,7 @@ import express from 'express';
 import db from '../database/db.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { autoSaveSnapshot } from './backup.js';
+import { executeTurso } from '../database/turso.js';
 
 const router = express.Router();
 
@@ -284,6 +285,31 @@ router.post('/', authenticateToken, (req, res) => {
     );
 
     const newProduct = db.prepare('SELECT * FROM products WHERE id = ?').get(result.lastInsertRowid);
+    
+    // Save directly to Turso cloud
+    executeTurso(`
+      INSERT INTO products (
+        id, sku, name, slug, category_id, category_slug, category_name,
+        short_description, description, specifications, price, discount_price,
+        stock_quantity, is_available, is_featured, is_published,
+        primary_image, images, meta_title, meta_description
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(sku) DO UPDATE SET
+        name=excluded.name, price=excluded.price, discount_price=excluded.discount_price,
+        stock_quantity=excluded.stock_quantity, is_available=excluded.is_available,
+        primary_image=excluded.primary_image, images=excluded.images
+    `, [
+      newProduct.id, newProduct.sku, newProduct.name, newProduct.slug,
+      newProduct.category_id, newProduct.category_slug, newProduct.category_name,
+      newProduct.short_description, newProduct.description,
+      typeof newProduct.specifications === 'object' ? JSON.stringify(newProduct.specifications) : (newProduct.specifications || '{}'),
+      newProduct.price, newProduct.discount_price,
+      newProduct.stock_quantity, newProduct.is_available, newProduct.is_featured,
+      newProduct.is_published, newProduct.primary_image,
+      typeof newProduct.images === 'object' ? JSON.stringify(newProduct.images) : (newProduct.images || '[]'),
+      newProduct.meta_title, newProduct.meta_description
+    ]).catch(() => {});
+
     autoSaveSnapshot();
 
     return res.status(201).json({
@@ -393,6 +419,26 @@ router.put('/:id', authenticateToken, (req, res) => {
     );
 
     const updated = db.prepare('SELECT * FROM products WHERE id = ?').get(Number(id));
+    
+    // Save update directly to Turso cloud
+    executeTurso(`
+      UPDATE products SET
+        name = ?, category_id = ?, category_slug = ?, category_name = ?,
+        short_description = ?, description = ?, specifications = ?,
+        price = ?, discount_price = ?, stock_quantity = ?, is_available = ?,
+        is_featured = ?, is_published = ?, primary_image = ?, images = ?,
+        meta_title = ?, meta_description = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `, [
+      updated.name, updated.category_id, updated.category_slug, updated.category_name,
+      updated.short_description, updated.description,
+      typeof updated.specifications === 'object' ? JSON.stringify(updated.specifications) : (updated.specifications || '{}'),
+      updated.price, updated.discount_price, updated.stock_quantity, updated.is_available,
+      updated.is_featured, updated.is_published, updated.primary_image,
+      typeof updated.images === 'object' ? JSON.stringify(updated.images) : (updated.images || '[]'),
+      updated.meta_title, updated.meta_description, Number(id)
+    ]).catch(() => {});
+
     autoSaveSnapshot();
 
     return res.json({
@@ -416,6 +462,10 @@ router.delete('/:id', authenticateToken, (req, res) => {
     }
 
     db.prepare('DELETE FROM products WHERE id = ?').run(Number(id));
+    
+    // Delete directly from Turso cloud
+    executeTurso('DELETE FROM products WHERE id = ?', [Number(id)]).catch(() => {});
+    
     autoSaveSnapshot();
     return res.json({ success: true, message: `Product '${existing.name}' deleted successfully.` });
   } catch (error) {

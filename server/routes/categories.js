@@ -2,6 +2,7 @@ import express from 'express';
 import db from '../database/db.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { autoSaveSnapshot } from './backup.js';
+import { executeTurso } from '../database/turso.js';
 
 const router = express.Router();
 
@@ -73,6 +74,12 @@ router.post('/', authenticateToken, (req, res) => {
 
     const result = stmt.run(name.trim(), slug, description, image_url, Number(display_order));
     const newCat = db.prepare('SELECT * FROM categories WHERE id = ?').get(result.lastInsertRowid);
+    
+    // Save to Turso cloud
+    executeTurso('INSERT INTO categories (id, name, slug, description, image_url, display_order) VALUES (?, ?, ?, ?, ?, ?)', [
+      newCat.id, newCat.name, newCat.slug, newCat.description, newCat.image_url, newCat.display_order
+    ]).catch(() => {});
+
     autoSaveSnapshot();
 
     return res.status(201).json({ success: true, message: 'Category created', data: newCat });
@@ -116,6 +123,12 @@ router.put('/:id', authenticateToken, (req, res) => {
     }
 
     const updated = db.prepare('SELECT * FROM categories WHERE id = ?').get(Number(id));
+    
+    // Update in Turso cloud
+    executeTurso('UPDATE categories SET name = ?, description = ?, image_url = ?, display_order = ? WHERE id = ?', [
+      updated.name, updated.description, updated.image_url, updated.display_order, Number(id)
+    ]).catch(() => {});
+
     autoSaveSnapshot();
     return res.json({ success: true, message: 'Category updated', data: updated });
   } catch (error) {
@@ -136,6 +149,11 @@ router.delete('/:id', authenticateToken, (req, res) => {
     // Set category_id = NULL on affected products
     db.prepare('UPDATE products SET category_id = NULL, category_slug = NULL, category_name = NULL WHERE category_id = ?').run(Number(id));
     db.prepare('DELETE FROM categories WHERE id = ?').run(Number(id));
+    
+    // Delete in Turso cloud
+    executeTurso('DELETE FROM categories WHERE id = ?', [Number(id)]).catch(() => {});
+    executeTurso('UPDATE products SET category_id = NULL, category_slug = NULL, category_name = NULL WHERE category_id = ?', [Number(id)]).catch(() => {});
+
     autoSaveSnapshot();
 
     return res.json({ success: true, message: `Category '${existing.name}' deleted successfully.` });

@@ -82,11 +82,6 @@ pullFromTurso().then((synced) => {
   if (synced) console.log('✅ Synchronized database with Turso cloud.');
 }).catch((e) => console.warn('Turso initial pull notice:', e.message));
 
-// Background periodic sync every 5 minutes
-setInterval(() => {
-  pullFromTurso().catch(() => {});
-}, 300000);
-
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({

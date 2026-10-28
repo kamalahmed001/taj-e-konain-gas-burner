@@ -2,6 +2,7 @@ import express from 'express';
 import db from '../database/db.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { autoSaveSnapshot } from './backup.js';
+import { executeTurso } from '../database/turso.js';
 
 const router = express.Router();
 
@@ -53,6 +54,7 @@ router.put('/', authenticateToken, (req, res) => {
         if (!cleanVal.startsWith('92')) cleanVal = '92' + cleanVal;
       }
       upsert.run(key, cleanVal);
+      executeTurso('INSERT INTO store_settings (key, value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP', [key, cleanVal]).catch(() => {});
     }
 
     // Return updated settings

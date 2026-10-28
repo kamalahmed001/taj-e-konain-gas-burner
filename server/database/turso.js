@@ -121,6 +121,18 @@ export async function pushFullStoreToTurso() {
     const categories = db.prepare('SELECT * FROM categories').all();
     const settings = db.prepare('SELECT * FROM store_settings').all();
 
+    // 1. Delete removed categories from Turso cloud
+    const localCatIds = categories.map(c => c.id).filter(Boolean);
+    if (localCatIds.length > 0) {
+      await client.execute(`DELETE FROM categories WHERE id NOT IN (${localCatIds.join(',')})`);
+    }
+
+    // 2. Delete removed products from Turso cloud
+    const localProdIds = products.map(p => p.id).filter(Boolean);
+    if (localProdIds.length > 0) {
+      await client.execute(`DELETE FROM products WHERE id NOT IN (${localProdIds.join(',')})`);
+    }
+
     for (const c of categories) {
       await client.execute({
         sql: `INSERT INTO categories (id, name, slug, description, image_url, display_order)
